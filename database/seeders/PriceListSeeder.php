@@ -12,13 +12,24 @@ class PriceListSeeder extends Seeder
      */
     public function run(): void
     {
-        $lists = [
-            ['name' => 'Standard Retail Price', 'code' => 'RETAIL', 'currency' => 'EGP', 'is_active' => true, 'is_default' => true],
-            ['name' => 'Wholesale Price List', 'code' => 'WHOLESALE', 'currency' => 'EGP', 'is_active' => true, 'is_default' => false],
-            ['name' => 'VIP Customer Price', 'code' => 'VIP', 'currency' => 'EGP', 'is_active' => true, 'is_default' => false],
+        $priceLists = [
+            [
+                'name' => ['ar' => 'قائمة أسعار التجزئة', 'en' => 'Standard Retail Price List'],
+                'code' => 'RETAIL-EGP',
+                'currency' => 'EGP',
+                'is_active' => true,
+                'is_default' => true,
+            ],
+            [
+                'name' => ['ar' => 'قائمة أسعار الجملة', 'en' => 'Wholesale Price List'],
+                'code' => 'WHOLESALE-EGP',
+                'currency' => 'EGP',
+                'is_active' => true,
+                'is_default' => false,
+            ],
         ];
 
-        foreach ($lists as $list) {
+        foreach ($priceLists as $list) {
             PriceList::firstOrCreate(['code' => $list['code']], $list);
         }
     }

@@ -14,17 +14,17 @@ class WarehouseSeeder extends Seeder
     {
         $warehouses = [
             [
-                'name' => 'Main Central Warehouse',
+                'name' => ['ar' => 'المخزن الرئيسي - القاهرة', 'en' => 'Main Warehouse - Cairo'],
                 'code' => 'WH-MAIN',
-                'phone' => '+20 100 111 2222',
-                'address' => 'Industrial Zone, Building 45, Cairo',
+                'address' => 'المنطقة الصناعية - العبور',
+                'phone' => '+20 2 4444 1111',
                 'is_active' => true,
             ],
             [
-                'name' => 'Retail Store Branch #1',
+                'name' => ['ar' => 'مخزن صالة العرض #1', 'en' => 'Store Showroom Warehouse #1'],
                 'code' => 'WH-STORE1',
-                'phone' => '+20 100 333 4444',
-                'address' => 'Downtown Commercial Mall, Shop 12',
+                'address' => 'شارع 90 - التجمع الخامس',
+                'phone' => '+20 2 4444 2222',
                 'is_active' => true,
             ],
         ];

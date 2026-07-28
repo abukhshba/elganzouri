@@ -75,8 +75,8 @@ class InventoryTransferResource extends Resource
                     ->options(TransferStatus::options()),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Actions\ViewAction::make(),
+                Actions\EditAction::make(),
             ]);
     }
 

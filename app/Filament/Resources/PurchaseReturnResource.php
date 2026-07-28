@@ -69,8 +69,8 @@ class PurchaseReturnResource extends Resource
                     ->options(ReturnStatus::options()),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Actions\ViewAction::make(),
+                Actions\EditAction::make(),
             ]);
     }
 

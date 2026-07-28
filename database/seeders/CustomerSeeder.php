@@ -13,12 +13,12 @@ class CustomerSeeder extends Seeder
      */
     public function run(): void
     {
-        $cashTerm = PaymentTerm::where('name', 'Immediate Cash')->first();
-        $net15Term = PaymentTerm::where('name', 'Net 15 Days')->first();
+        $cashTerm = PaymentTerm::where('days_due', 0)->first();
+        $net15Term = PaymentTerm::where('days_due', 15)->first();
 
         $customers = [
             [
-                'name' => 'Walk-in Customer',
+                'name' => 'عميل نقدي (مباشر)',
                 'email' => 'walkin@store.com',
                 'phone' => '+20 100 000 0001',
                 'payment_term_id' => $cashTerm?->id,
@@ -27,10 +27,10 @@ class CustomerSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'name' => 'Al-Ahram Commercial Trading Co.',
+                'name' => 'شركة الأهرام والتجارية للحبوب والتوريدات',
                 'email' => 'orders@alahram-trading.com',
                 'phone' => '+20 2 2444 5555',
-                'address' => 'Nasr City, Building 18, Cairo',
+                'address' => 'مدينة نصر - المبنى 18 - القاهرة',
                 'tax_number' => 'TAX-CUST-9988',
                 'payment_term_id' => $net15Term?->id,
                 'credit_limit' => 50000.0000,

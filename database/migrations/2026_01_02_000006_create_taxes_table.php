@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('taxes', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
+            $table->text('name');
             $table->string('code', 20)->unique();
             $table->decimal('rate_percentage', 8, 4)->default(0.0000);
             $table->boolean('is_active')->default(true);

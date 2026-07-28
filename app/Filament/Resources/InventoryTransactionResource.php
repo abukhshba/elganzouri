@@ -85,7 +85,7 @@ class InventoryTransactionResource extends Resource
                     ->label('Transaction Type'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 // Read-only ledger, no bulk actions

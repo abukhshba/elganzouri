@@ -8,6 +8,9 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components;
 use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Tables\Table;
 
 class ItemResource extends Resource
@@ -19,6 +22,16 @@ class ItemResource extends Resource
     protected static \UnitEnum|string|null $navigationGroup = 'Catalog';
 
     protected static ?int $navigationSort = 1;
+
+    public static function getModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'صنف' : 'Item';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'الأصناف' : 'Items';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -102,16 +115,10 @@ class ItemResource extends Resource
                     ->label('Category'),
                 Tables\Filters\TernaryFilter::make('is_active'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                ]),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
+                RestoreAction::make(),
             ]);
     }
 

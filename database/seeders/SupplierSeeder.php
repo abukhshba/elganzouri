@@ -13,26 +13,26 @@ class SupplierSeeder extends Seeder
      */
     public function run(): void
     {
-        $net30 = PaymentTerm::where('name', 'Net 30 Days')->first();
+        $net30 = PaymentTerm::where('days_due', 30)->first();
 
         $suppliers = [
             [
-                'name' => 'Pyrex Middle East Distribution',
+                'name' => 'شركة بايركس الشرق الأوسط للتوزيع',
                 'company_name' => 'Pyrex ME LLC',
                 'email' => 'sales@pyrex-me.com',
                 'phone' => '+20 2 2777 8888',
-                'address' => 'Cairo Commercial Center, Tower B',
+                'address' => 'القاهرة - برج المركز التجاري',
                 'tax_number' => 'TAX-PYREX-001',
                 'payment_term_id' => $net30?->id,
                 'balance' => 0.0000,
                 'is_active' => true,
             ],
             [
-                'name' => 'Tefal Egypt Main Agency',
+                'name' => 'الوكيل الرئيسي لتيفال مصر',
                 'company_name' => 'SEB Groupe Egypt',
                 'email' => 'orders@tefal-egypt.com',
                 'phone' => '+20 2 2999 0000',
-                'address' => 'New Cairo Tech Hub, Street 90',
+                'address' => 'القاهرة الجديدة - شارع 90',
                 'tax_number' => 'TAX-TEFAL-002',
                 'payment_term_id' => $net30?->id,
                 'balance' => 0.0000,

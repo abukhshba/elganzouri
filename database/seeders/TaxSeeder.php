@@ -13,9 +13,18 @@ class TaxSeeder extends Seeder
     public function run(): void
     {
         $taxes = [
-            ['name' => 'Standard VAT 14%', 'code' => 'VAT14', 'rate_percentage' => 14.0000, 'is_active' => true],
-            ['name' => 'Zero Tax 0%', 'code' => 'VAT0', 'rate_percentage' => 0.0000, 'is_active' => true],
-            ['name' => 'Reduced Rate 5%', 'code' => 'VAT5', 'rate_percentage' => 5.0000, 'is_active' => true],
+            [
+                'name' => ['ar' => 'ضريبة القيمة المضافة 14%', 'en' => 'Value Added Tax (VAT) 14%'],
+                'code' => 'VAT14',
+                'rate_percentage' => 14.0000,
+                'is_active' => true,
+            ],
+            [
+                'name' => ['ar' => 'معفى من الضريبة (0%)', 'en' => 'Zero Tax (0%)'],
+                'code' => 'ZERO',
+                'rate_percentage' => 0.0000,
+                'is_active' => true,
+            ],
         ];
 
         foreach ($taxes as $tax) {

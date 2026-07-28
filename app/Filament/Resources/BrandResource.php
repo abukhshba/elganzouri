@@ -21,6 +21,16 @@ class BrandResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'ماركة' : 'Brand';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'الماركات' : 'Brands';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -56,14 +66,14 @@ class BrandResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
+                Actions\RestoreAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
+                    Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }

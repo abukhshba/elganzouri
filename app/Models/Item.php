@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Translatable\HasTranslations;
 
 class Item extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasTranslations;
+
+    public array $translatable = ['name', 'description'];
 
     protected $fillable = [
         'category_id',
@@ -50,8 +53,13 @@ class Item extends Model
         return $this->hasMany(ItemUnit::class);
     }
 
-    public function itemPrices(): HasMany
+    public function prices(): HasMany
     {
         return $this->hasMany(ItemPrice::class);
+    }
+
+    public function inventories(): HasMany
+    {
+        return $this->hasMany(ItemInventory::class);
     }
 }

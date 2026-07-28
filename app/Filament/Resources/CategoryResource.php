@@ -21,6 +21,16 @@ class CategoryResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'تصنيف' : 'Category';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'التصنيفات' : 'Categories';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -67,14 +77,14 @@ class CategoryResource extends Resource
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
+                Actions\RestoreAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
+                    Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }

@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreignId('base_unit_id')->constrained('units');
             $table->string('sku', 60)->unique();
             $table->string('barcode', 60)->nullable()->index();
-            $table->string('name', 255);
+            $table->text('name');
             $table->text('description')->nullable();
             $table->decimal('min_stock_alert', 15, 4)->default(0.0000);
-            $table->boolean('is_active')->default(true)->index();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

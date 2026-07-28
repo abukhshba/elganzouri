@@ -90,7 +90,7 @@ class ExpenseResource extends Resource
                     ->label('Cashbox Register'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 // Read-only vouchers, no bulk deletes

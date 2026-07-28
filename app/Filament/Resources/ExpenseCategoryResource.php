@@ -61,7 +61,7 @@ class ExpenseCategoryResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_active'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Actions\EditAction::make(),
             ]);
     }
 

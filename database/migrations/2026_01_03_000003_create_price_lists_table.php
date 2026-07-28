@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('price_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->string('code', 20)->unique();
+            $table->text('name');
+            $table->string('code', 30)->unique();
             $table->string('currency', 10)->default('EGP');
             $table->boolean('is_active')->default(true);
             $table->boolean('is_default')->default(false);

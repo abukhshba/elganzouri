@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\ItemPrice;
 use App\Models\ItemUnit;
+use App\Models\PriceList;
 use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
@@ -20,75 +22,72 @@ class ItemSeeder extends Seeder
         $pack = Unit::where('short_name', 'pk')->first();
         $carton = Unit::where('short_name', 'ctn')->first();
 
-        $glassCategory = Category::where('slug', 'drinkware-cups')->first() ?? Category::first();
-        $cookwareCategory = Category::where('slug', 'pots-pans')->first() ?? Category::first();
+        $cookwareCat = Category::where('slug', 'cookware-kitchenware')->first();
+        $glasswareCat = Category::where('slug', 'glassware-thermal')->first();
 
-        $luminarc = Brand::where('slug', 'luminarc')->first();
-        $tefal = Brand::where('slug', 'tefal')->first();
+        $pyrexBrand = Brand::where('slug', 'pyrex')->first();
+        $tefalBrand = Brand::where('slug', 'tefal')->first();
 
-        // 1. Luminarc Glass Cup
-        $cup = Item::firstOrCreate(
-            ['sku' => 'ITEM-CUP-001'],
+        $retailList = PriceList::where('code', 'RETAIL-EGP')->first();
+
+        $items = [
             [
-                'name' => 'Luminarc Glass Cup 250ml',
-                'barcode' => '629100100201',
-                'category_id' => $glassCategory->id,
-                'brand_id' => $luminarc?->id,
-                'base_unit_id' => $piece->id,
-                'description' => 'Premium French tempered glass cup 250ml.',
-                'min_stock_alert' => 50.0000,
-                'is_active' => true,
-            ]
-        );
-
-        // Multi-UOM units for Glass Cup
-        ItemUnit::firstOrCreate(
-            ['item_id' => $cup->id, 'unit_id' => $pack->id],
-            [
-                'conversion_factor' => 6.0000, // 1 Pack = 6 Pieces
-                'barcode' => '629100100206',
-                'purchase_price' => 60.0000,
-                'sale_price' => 90.0000,
-                'is_default_sale' => true,
-            ]
-        );
-
-        ItemUnit::firstOrCreate(
-            ['item_id' => $cup->id, 'unit_id' => $carton->id],
-            [
-                'conversion_factor' => 72.0000, // 1 Carton = 72 Pieces
-                'barcode' => '629100100272',
-                'purchase_price' => 650.0000,
-                'sale_price' => 950.0000,
-                'is_default_purchase' => true,
-            ]
-        );
-
-        // 2. Tefal Frying Pan
-        $pan = Item::firstOrCreate(
-            ['sku' => 'ITEM-PAN-028'],
-            [
-                'name' => 'Tefal Non-Stick Frying Pan 28cm',
-                'barcode' => '316843028001',
-                'category_id' => $cookwareCategory->id,
-                'brand_id' => $tefal?->id,
-                'base_unit_id' => $piece->id,
-                'description' => 'Tefal Thermo-Signal 28cm non-stick frying pan.',
+                'sku' => 'PYREX-BOWL-3L',
+                'barcode' => '629100000001',
+                'name' => ['ar' => 'وعاء زجاجي فرنسي حراري بايركس 3 لتر', 'en' => 'Pyrex French Thermal Glass Bowl 3L'],
+                'description' => ['ar' => 'وعاء بيضاوي مقاوم للحرارة سعة 3 لتر مصنوع في فرنسا', 'en' => 'Heat resistant oval bowl 3 liters capacity made in France'],
+                'category_id' => $glasswareCat?->id,
+                'brand_id' => $pyrexBrand?->id,
+                'base_unit_id' => $piece?->id,
                 'min_stock_alert' => 10.0000,
                 'is_active' => true,
-            ]
-        );
-
-        ItemUnit::firstOrCreate(
-            ['item_id' => $pan->id, 'unit_id' => $carton->id],
+                'units' => [
+                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 250.0],
+                    ['unit_id' => $carton?->id, 'conversion_factor' => 12.0, 'sale_price' => 2800.0],
+                ],
+            ],
             [
-                'conversion_factor' => 10.0000, // 1 Carton = 10 Pans
-                'barcode' => '316843028010',
-                'purchase_price' => 3200.0000,
-                'sale_price' => 4500.0000,
-                'is_default_purchase' => true,
-                'is_default_sale' => false,
-            ]
-        );
+                'sku' => 'TEFAL-FRYPAN-28',
+                'barcode' => '629100000002',
+                'name' => ['ar' => 'مقلاة تيفال سينسـيشن مقاس 28 سم غير لاصقة', 'en' => 'Tefal Sensation Non-Stick Frying Pan 28cm'],
+                'description' => ['ar' => 'مقلاة مصنوعة من الألمنيوم عالي الجودة مع طبقة تيتانيوم غير لاصقة', 'en' => 'High quality aluminum pan with titanium non-stick layer'],
+                'category_id' => $cookwareCat?->id,
+                'brand_id' => $tefalBrand?->id,
+                'base_unit_id' => $piece?->id,
+                'min_stock_alert' => 5.0000,
+                'is_active' => true,
+                'units' => [
+                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 850.0],
+                    ['unit_id' => $pack?->id, 'conversion_factor' => 6.0, 'sale_price' => 4900.0],
+                ],
+            ],
+        ];
+
+        foreach ($items as $itemData) {
+            $units = $itemData['units'];
+            unset($itemData['units']);
+
+            $item = Item::firstOrCreate(['sku' => $itemData['sku']], $itemData);
+
+            foreach ($units as $u) {
+                $itemUnit = ItemUnit::firstOrCreate([
+                    'item_id' => $item->id,
+                    'unit_id' => $u['unit_id'],
+                ], [
+                    'conversion_factor' => $u['conversion_factor'],
+                    'sale_price' => $u['sale_price'],
+                ]);
+
+                if ($retailList) {
+                    ItemPrice::firstOrCreate([
+                        'price_list_id' => $retailList->id,
+                        'item_id' => $item->id,
+                        'item_unit_id' => $itemUnit->id,
+                    ], [
+                        'price' => $u['sale_price'],
+                    ]);
+                }
+            }
+        }
     }
 }

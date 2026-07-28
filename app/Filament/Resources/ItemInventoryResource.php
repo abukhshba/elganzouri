@@ -77,7 +77,7 @@ class ItemInventoryResource extends Resource
                     ->query(fn ($query) => $query->lowStock()),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
+                Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 // Read-only resource, no bulk actions

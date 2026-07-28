@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Brand;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class BrandSeeder extends Seeder
 {
@@ -13,13 +12,16 @@ class BrandSeeder extends Seeder
      */
     public function run(): void
     {
-        $brands = ['Pyrex', 'Tefal', 'Luminarc', 'Philips', 'Moulinex', 'LocknLock'];
+        $brands = [
+            ['name' => ['ar' => 'بايركس', 'en' => 'Pyrex'], 'slug' => 'pyrex'],
+            ['name' => ['ar' => 'تيفال', 'en' => 'Tefal'], 'slug' => 'tefal'],
+            ['name' => ['ar' => 'لومينارك', 'en' => 'Luminarc'], 'slug' => 'luminarc'],
+            ['name' => ['ar' => 'براون', 'en' => 'Braun'], 'slug' => 'braun'],
+            ['name' => ['ar' => 'زينوكس', 'en' => 'Zinox'], 'slug' => 'zinox'],
+        ];
 
-        foreach ($brands as $name) {
-            Brand::firstOrCreate(
-                ['slug' => Str::slug($name)],
-                ['name' => $name]
-            );
+        foreach ($brands as $brand) {
+            Brand::firstOrCreate(['slug' => $brand['slug']], $brand);
         }
     }
 }

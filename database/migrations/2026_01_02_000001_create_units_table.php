@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 50);
-            $table->string('short_name', 15);
+            $table->text('name');
+            $table->string('short_name', 20)->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

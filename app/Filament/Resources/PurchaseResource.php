@@ -20,9 +20,17 @@ class PurchaseResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Purchasing';
 
-    protected static ?string $navigationLabel = 'Purchase Invoices';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'فاتورة شراء' : 'Purchase Invoice';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'فواتير الشراء' : 'Purchase Invoices';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -79,8 +87,8 @@ class PurchaseResource extends Resource
                     ->options(PurchaseStatus::options()),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Actions\ViewAction::make(),
+                Actions\EditAction::make(),
             ]);
     }
 

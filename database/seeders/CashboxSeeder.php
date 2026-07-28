@@ -18,13 +18,13 @@ class CashboxSeeder extends Seeder
 
         $cashboxes = [
             [
-                'name' => 'Main Treasury Register',
+                'name' => 'خزينة الخزينة الرئيسية',
                 'warehouse_id' => $mainWh?->id,
                 'current_balance' => 10000.0000,
                 'is_active' => true,
             ],
             [
-                'name' => 'POS Register #1 - Store Branch',
+                'name' => 'خزينة نقطة البيع #1 - الفرع',
                 'warehouse_id' => $storeWh?->id,
                 'current_balance' => 2000.0000,
                 'is_active' => true,

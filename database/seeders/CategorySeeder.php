@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
@@ -14,24 +13,26 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            'Cookware & Kitchenware' => ['Pots & Pans', 'Bakeware', 'Kitchen Utensils'],
-            'Glassware & Tableware' => ['Drinkware Cups', 'Dinner Sets', 'Bowls'],
-            'Cleaning & Storage' => ['Food Storage Containers', 'Cleaning Supplies'],
-            'Home Appliances' => ['Blenders & Mixers', 'Coffee Makers'],
+            [
+                'name' => ['ar' => 'أدوات المطبخ والطهي', 'en' => 'Cookware & Kitchenware'],
+                'slug' => 'cookware-kitchenware',
+            ],
+            [
+                'name' => ['ar' => 'الأدوات الزجاجية والحرارية', 'en' => 'Glassware & Thermal Items'],
+                'slug' => 'glassware-thermal',
+            ],
+            [
+                'name' => ['ar' => 'الأجهزة المنزلية الصغيرة', 'en' => 'Small Home Appliances'],
+                'slug' => 'small-home-appliances',
+            ],
+            [
+                'name' => ['ar' => 'أدوات التنظيف والتنظيم', 'en' => 'Cleaning & Storage Supplies'],
+                'slug' => 'cleaning-storage',
+            ],
         ];
 
-        foreach ($categories as $parentName => $subCategories) {
-            $parent = Category::firstOrCreate(
-                ['slug' => Str::slug($parentName)],
-                ['name' => $parentName, 'parent_id' => null]
-            );
-
-            foreach ($subCategories as $subName) {
-                Category::firstOrCreate(
-                    ['slug' => Str::slug($subName)],
-                    ['name' => $subName, 'parent_id' => $parent->id]
-                );
-            }
+        foreach ($categories as $cat) {
+            Category::firstOrCreate(['slug' => $cat['slug']], $cat);
         }
     }
 }

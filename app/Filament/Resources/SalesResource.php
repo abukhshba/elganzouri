@@ -20,9 +20,17 @@ class SalesResource extends Resource
 
     protected static \UnitEnum|string|null $navigationGroup = 'Sales';
 
-    protected static ?string $navigationLabel = 'Sales Invoices';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'فاتورة مبيعات' : 'Sales Invoice';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'فواتير المبيعات' : 'Sales Invoices';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -84,8 +92,8 @@ class SalesResource extends Resource
                     ->options(SaleStatus::options()),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Actions\ViewAction::make(),
+                Actions\EditAction::make(),
             ]);
     }
 

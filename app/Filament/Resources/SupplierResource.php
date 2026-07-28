@@ -8,6 +8,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components;
 use Filament\Schemas\Schema;
 use Filament\Tables;
+use Filament\Actions;
 use Filament\Tables\Table;
 
 class SupplierResource extends Resource
@@ -19,6 +20,16 @@ class SupplierResource extends Resource
     protected static \UnitEnum|string|null $navigationGroup = 'Purchasing';
 
     protected static ?int $navigationSort = 1;
+
+    public static function getModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'مورد' : 'Supplier';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return app()->getLocale() === 'ar' ? 'الموردين' : 'Suppliers';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -84,14 +95,14 @@ class SupplierResource extends Resource
                 Tables\Filters\TernaryFilter::make('is_active'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                Actions\EditAction::make(),
+                Actions\DeleteAction::make(),
+                Actions\RestoreAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+                Actions\BulkActionGroup::make([
+                    Actions\DeleteBulkAction::make(),
+                    Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }

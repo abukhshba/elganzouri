@@ -13,15 +13,28 @@ class PaymentTermSeeder extends Seeder
     public function run(): void
     {
         $terms = [
-            ['name' => 'Immediate Cash', 'days_due' => 0, 'is_active' => true, 'is_default' => true],
-            ['name' => 'Net 7 Days', 'days_due' => 7, 'is_active' => true, 'is_default' => false],
-            ['name' => 'Net 15 Days', 'days_due' => 15, 'is_active' => true, 'is_default' => false],
-            ['name' => 'Net 30 Days', 'days_due' => 30, 'is_active' => true, 'is_default' => false],
-            ['name' => 'Net 60 Days', 'days_due' => 60, 'is_active' => true, 'is_default' => false],
+            [
+                'name' => ['ar' => 'نقداً فورياً', 'en' => 'Immediate Cash'],
+                'days_due' => 0,
+                'description' => ['ar' => 'الدفع الفوري عند الاستلام', 'en' => 'Payment immediately upon receipt'],
+                'is_active' => true,
+            ],
+            [
+                'name' => ['ar' => 'آجل 15 يوماً', 'en' => 'Net 15 Days'],
+                'days_due' => 15,
+                'description' => ['ar' => 'السداد خلال 15 يوماً من تاريخ الفاتورة', 'en' => 'Payment due within 15 days'],
+                'is_active' => true,
+            ],
+            [
+                'name' => ['ar' => 'آجل 30 يوماً', 'en' => 'Net 30 Days'],
+                'days_due' => 30,
+                'description' => ['ar' => 'السداد خلال 30 يوماً من تاريخ الفاتورة', 'en' => 'Payment due within 30 days'],
+                'is_active' => true,
+            ],
         ];
 
         foreach ($terms as $term) {
-            PaymentTerm::firstOrCreate(['name' => $term['name']], $term);
+            PaymentTerm::firstOrCreate(['days_due' => $term['days_due']], $term);
         }
     }
 }
