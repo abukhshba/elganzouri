@@ -13,8 +13,12 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('unit_group_id')->nullable()->constrained('unit_groups')->onDelete('cascade');
             $table->text('name');
             $table->string('short_name', 20)->unique();
+            $table->boolean('is_base')->default(false);
+            $table->boolean('is_custom_per_item')->default(false);
+            $table->decimal('global_conversion_factor', 15, 4)->default(1.0000);
             $table->timestamps();
             $table->softDeletes();
         });

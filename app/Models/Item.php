@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\DecimalCast;
+use App\Traits\HasBilingualFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Item extends Model
 {
-    use HasFactory, SoftDeletes, HasTranslations;
+    use HasFactory, SoftDeletes, HasTranslations, HasBilingualFields;
 
     public array $translatable = ['name', 'description'];
 

@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             CompanySettingsSeeder::class,
             DocumentNumberSequenceSeeder::class,
+            UnitGroupSeeder::class,
             UnitSeeder::class,
             CategorySeeder::class,
             BrandSeeder::class,

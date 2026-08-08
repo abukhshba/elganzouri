@@ -17,6 +17,7 @@ class Cashbox extends Model
         'warehouse_id',
         'user_id',
         'current_balance',
+        'balance',
         'is_active',
     ];
 
@@ -24,6 +25,16 @@ class Cashbox extends Model
         'current_balance' => DecimalCast::class,
         'is_active' => 'boolean',
     ];
+
+    public function getBalanceAttribute(): float
+    {
+        return (float) $this->current_balance;
+    }
+
+    public function setBalanceAttribute($value): void
+    {
+        $this->attributes['current_balance'] = $value;
+    }
 
     public function warehouse(): BelongsTo
     {

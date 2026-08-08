@@ -32,6 +32,51 @@ class ItemSeeder extends Seeder
 
         $items = [
             [
+                'sku' => 'CUP-CERAMIC-01',
+                'barcode' => '629100000003',
+                'name' => ['ar' => 'كوب سيراميك فاخر', 'en' => 'Ceramic Cup'],
+                'description' => ['ar' => 'كوب سيراميك حراري ملون 350 مل', 'en' => 'Heat resistant colored ceramic cup 350ml'],
+                'category_id' => $glasswareCat?->id,
+                'brand_id' => $pyrexBrand?->id,
+                'base_unit_id' => $piece?->id,
+                'min_stock_alert' => 20.0000,
+                'is_active' => true,
+                'units' => [
+                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 45.0],
+                    ['unit_id' => $carton?->id, 'conversion_factor' => 72.0, 'sale_price' => 3100.0],
+                ],
+            ],
+            [
+                'sku' => 'PLATE-DINNER-01',
+                'barcode' => '629100000004',
+                'name' => ['ar' => 'طبق عشاء سيراميك', 'en' => 'Dinner Plate'],
+                'description' => ['ar' => 'طبق عشاء كبير مقاس 26 سم', 'en' => 'Large dinner plate 26cm'],
+                'category_id' => $glasswareCat?->id,
+                'brand_id' => $pyrexBrand?->id,
+                'base_unit_id' => $piece?->id,
+                'min_stock_alert' => 15.0000,
+                'is_active' => true,
+                'units' => [
+                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 85.0],
+                    ['unit_id' => $carton?->id, 'conversion_factor' => 24.0, 'sale_price' => 1950.0],
+                ],
+            ],
+            [
+                'sku' => 'SPOONS-STAINLESS-01',
+                'barcode' => '629100000005',
+                'name' => ['ar' => 'ملعقة طعام استانلس ستيل', 'en' => 'Spoons'],
+                'description' => ['ar' => 'طقم ملاعق استانلس غير قابل للصدأ', 'en' => 'Stainless steel dinner spoon'],
+                'category_id' => $cookwareCat?->id,
+                'brand_id' => $tefalBrand?->id,
+                'base_unit_id' => $piece?->id,
+                'min_stock_alert' => 50.0000,
+                'is_active' => true,
+                'units' => [
+                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 15.0],
+                    ['unit_id' => $carton?->id, 'conversion_factor' => 144.0, 'sale_price' => 2000.0],
+                ],
+            ],
+            [
                 'sku' => 'PYREX-BOWL-3L',
                 'barcode' => '629100000001',
                 'name' => ['ar' => 'وعاء زجاجي فرنسي حراري بايركس 3 لتر', 'en' => 'Pyrex French Thermal Glass Bowl 3L'],

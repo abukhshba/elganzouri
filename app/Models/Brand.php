@@ -2,19 +2,32 @@
 
 namespace App\Models;
 
+use App\Traits\HasBilingualFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
 class Brand extends Model
 {
-    use HasFactory, SoftDeletes, HasTranslations;
+    use HasFactory, SoftDeletes, HasTranslations, HasBilingualFields;
 
-    public array $translatable = ['name'];
+    public array $translatable = ['name', 'description'];
 
     protected $fillable = [
-        'name',
         'slug',
+        'name',
+        'description',
+        'is_active',
     ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(Item::class);
+    }
 }

@@ -2,24 +2,26 @@
 
 namespace App\Models;
 
+use App\Traits\HasBilingualFields;
 use App\Traits\HasWarehouseScope;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
 class Warehouse extends Model
 {
-    use HasFactory, SoftDeletes, HasWarehouseScope, HasTranslations;
+    use HasFactory, SoftDeletes, HasWarehouseScope, HasTranslations, HasBilingualFields;
 
-    public array $translatable = ['name'];
+    public array $translatable = ['name', 'description'];
 
     protected $fillable = [
-        'name',
         'code',
-        'address',
+        'name',
         'phone',
+        'address',
+        'description',
         'is_active',
     ];
 
@@ -27,8 +29,8 @@ class Warehouse extends Model
         'is_active' => 'boolean',
     ];
 
-    public function scopeActive(Builder $query): Builder
+    public function inventories(): HasMany
     {
-        return $query->where('is_active', true);
+        return $this->hasMany(ItemInventory::class);
     }
 }

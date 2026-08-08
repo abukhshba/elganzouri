@@ -91,10 +91,10 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Create Default Admin User
         $adminUser = User::firstOrCreate(
-            ['email' => 'admin@erp.com'],
+            ['email' => 'abukhshba77@gmail.com'],
             [
                 'name' => 'ERP Super Admin',
-                'password' => bcrypt('password'),
+                'password' => bcrypt('123123123'),
             ]
         );
 

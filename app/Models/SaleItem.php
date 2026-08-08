@@ -15,6 +15,7 @@ class SaleItem extends Model
         'sale_id',
         'item_id',
         'unit_id',
+        'warehouse_id',
         'quantity',
         'unit_price',
         'conversion_factor',
@@ -49,5 +50,10 @@ class SaleItem extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
     }
 }

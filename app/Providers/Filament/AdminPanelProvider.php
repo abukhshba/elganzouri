@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Indigo,
             ])
+            ->font('Cairo', provider: \Filament\FontProviders\GoogleFontProvider::class)
             ->userMenuItems([
                 MenuItem::make()
                     ->label(fn () => app()->getLocale() === 'ar' ? 'English (LTR)' : 'العربية (RTL)')
