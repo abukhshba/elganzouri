@@ -102,5 +102,16 @@ return [
         'avg_cost' => 'Moving WAC (EGP)',
         'timestamp' => 'Timestamp',
         'created_at' => 'Created Date',
+        'new_customer' => 'New Customer',
+        'payment' => 'Payment',
+        'paid_in_full' => 'Paid in Full',
+        'paid_amount' => 'Paid Amount (EGP)',
+        'unit_type' => 'Unit Type',
+        'is_default' => 'Is Default',
+        'value' => 'Conversion Value',
+    ],
+
+    'validation' => [
+        'unique_conversion_value' => 'A unit with the same Conversion Value already exists.',
     ],
 ];

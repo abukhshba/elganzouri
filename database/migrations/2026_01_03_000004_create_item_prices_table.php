@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('price_list_id')->constrained('price_lists')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->foreignId('item_unit_id')->nullable()->constrained('item_units')->onDelete('cascade');
+            $table->foreignId('measurement_unit_detail_id')->nullable()->constrained('measurement_unit_details')->onDelete('cascade');
             $table->decimal('price', 15, 4)->default(0.0000);
             $table->decimal('min_quantity', 15, 4)->default(1.0000);
             $table->date('start_date')->nullable();

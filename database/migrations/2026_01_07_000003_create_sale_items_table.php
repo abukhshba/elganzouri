@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sale_id')->constrained('sales')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items');
-            $table->foreignId('unit_id')->constrained('units');
+            $table->foreignId('measurement_unit_detail_id')->constrained('measurement_unit_details');
             $table->decimal('quantity', 15, 4);
             $table->decimal('unit_price', 15, 4);
             $table->decimal('conversion_factor', 15, 4)->default(1.0000);

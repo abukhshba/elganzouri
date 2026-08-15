@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Sales\Schemas;
 
+use App\Models\Item;
+
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -19,7 +21,7 @@ class SalesForm
                 Section::make(__('erp.resources.sale'))
                     ->schema([
                         Checkbox::make('is_new_customer')
-                            ->label(__('erp.fields.new_customer') ?? 'عميل جديد')
+                            ->label(__('erp.fields.new_customer'))
                             ->default(false)
                             ->live()
                             ->dehydrated(false)
@@ -34,7 +36,7 @@ class SalesForm
                             ->required(fn ($get): bool => ! (bool) $get('is_new_customer')),
 
                         TextInput::make('new_customer_name')
-                            ->label(__('erp.fields.name').' (العميل)')
+                            ->label(__('erp.fields.name').' ('.__('erp.resources.customer').')')
                             ->visible(fn ($get): bool => (bool) $get('is_new_customer'))
                             ->required(fn ($get): bool => (bool) $get('is_new_customer'))
                             ->dehydrated(false)
@@ -62,6 +64,19 @@ class SalesForm
                                     ->searchable()
                                     ->preload()
                                     ->required()
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, $get, $set) {
+                                        if ($state) {
+                                            $item = Item::with('measurementUnit.details')->find($state);
+                                            if ($item && $item->measurementUnit) {
+                                                $defaultDetail = $item->measurementUnit->details->where('is_default', true)->first();
+                                                if ($defaultDetail) {
+                                                    $set('measurement_unit_detail_id', $defaultDetail->id);
+                                                }
+                                            }
+                                        }
+                                        self::updateTotals($get, $set);
+                                    })
                                     ->columnSpan(2),
 
                                 Select::make('warehouse_id')
@@ -71,9 +86,21 @@ class SalesForm
                                     ->preload()
                                     ->required(),
 
-                                Select::make('unit_id')
+                                Select::make('measurement_unit_detail_id')
                                     ->label(__('erp.resources.unit'))
-                                    ->relationship('unit', 'name')
+                                    ->options(function ($get) {
+                                        $itemId = $get('item_id');
+                                        if (! $itemId) {
+                                            return \App\Models\MeasurementUnitDetail::pluck('name', 'id');
+                                        }
+
+                                        $item = Item::with('measurementUnit.details')->find($itemId);
+                                        if (! $item || ! $item->measurementUnit) {
+                                            return \App\Models\MeasurementUnitDetail::pluck('name', 'id');
+                                        }
+
+                                        return $item->measurementUnit->details->pluck('name', 'id');
+                                    })
                                     ->searchable()
                                     ->preload()
                                     ->required(),
@@ -108,7 +135,7 @@ class SalesForm
                                     ->prefix('EGP')
                                     ->readOnly(),
                             ])
-                            ->columns(7)
+                            ->columns(4)
                             ->defaultItems(1)
                             ->live()
                             ->afterStateUpdated(fn ($get, $set) => self::updateTotals($get, $set))
@@ -116,7 +143,7 @@ class SalesForm
                     ])
                     ->columnSpanFull(),
 
-                Section::make(__('erp.fields.payment') ?? 'الدفع')
+                Section::make(__('erp.fields.payment'))
                     ->schema([
                         Select::make('cashbox_id')
                             ->label(__('erp.resources.cashbox'))
@@ -133,7 +160,7 @@ class SalesForm
                             ->readOnly(),
 
                         Checkbox::make('is_paid')
-                            ->label(__('erp.fields.paid_in_full') ?? 'مدفوع بالكامل')
+                            ->label(__('erp.fields.paid_in_full'))
                             ->default(true)
                             ->live()
                             ->dehydrated(false)
@@ -144,7 +171,7 @@ class SalesForm
                             }),
 
                         TextInput::make('paid_amount')
-                            ->label(__('erp.fields.paid_amount') ?? 'المبلغ المدفوع')
+                            ->label(__('erp.fields.paid_amount'))
                             ->numeric()
                             ->prefix('EGP')
                             ->default(0.00)

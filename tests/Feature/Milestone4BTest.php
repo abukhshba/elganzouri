@@ -2,13 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Enums\InventoryTransactionType;
-use App\Exceptions\InsufficientStockException;
-use App\Models\Category;
-use App\Models\InventoryTransaction;
-use App\Models\Item;
-use App\Models\ItemInventory;
-use App\Models\Unit;
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
+
 use App\Models\User;
 use App\Models\Warehouse;
 use App\Services\InventoryPostingService;
@@ -23,13 +19,13 @@ class Milestone4BTest extends TestCase
     public function test_inventory_posting_service_inflow_calculates_wac_and_updates_snapshot(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
 
         $item = Item::create([
             'category_id' => $category->id,
-            'base_unit_id' => $piece->id,
+            'measurement_unit_id' => $unitGroup->id,
             'sku' => 'ITEM-WAC-01',
             'name' => 'WAC Test Item',
         ]);
@@ -81,13 +77,13 @@ class Milestone4BTest extends TestCase
     public function test_inventory_posting_service_outflow_retains_wac_and_decrements_stock(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
 
         $item = Item::create([
             'category_id' => $category->id,
-            'base_unit_id' => $piece->id,
+            'measurement_unit_id' => $unitGroup->id,
             'sku' => 'ITEM-WAC-02',
             'name' => 'Outflow Test Item',
         ]);
@@ -121,13 +117,13 @@ class Milestone4BTest extends TestCase
     public function test_negative_stock_exception_blocks_overdrawn_outflow(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
 
         $item = Item::create([
             'category_id' => $category->id,
-            'base_unit_id' => $piece->id,
+            'measurement_unit_id' => $unitGroup->id,
             'sku' => 'ITEM-WAC-03',
             'name' => 'Negative Stock Test',
         ]);
@@ -146,10 +142,10 @@ class Milestone4BTest extends TestCase
     public function test_inventory_transaction_ledger_is_immutable(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
-        $item = Item::create(['category_id' => $category->id, 'base_unit_id' => $piece->id, 'sku' => 'ITEM-IMMUTABLE', 'name' => 'Immutable Item']);
+        $item = Item::create(['category_id' => $category->id, 'measurement_unit_id' => $unitGroup->id, 'sku' => 'ITEM-IMMUTABLE', 'name' => 'Immutable Item']);
 
         $postingService = app(InventoryPostingService::class);
         $tx = $postingService->post($item->id, $warehouse->id, InventoryTransactionType::IN, 10.0, 5.0, $item, $user->id);
@@ -158,3 +154,10 @@ class Milestone4BTest extends TestCase
         $tx->delete();
     }
 }
+
+
+
+
+
+
+

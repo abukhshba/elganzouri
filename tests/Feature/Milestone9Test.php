@@ -2,21 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Actions\Purchasing\ProcessPurchaseReturnAction;
-use App\Actions\Sales\ProcessSalesReturnAction;
-use App\Enums\InventoryTransactionType;
-use App\Enums\ReturnStatus;
-use App\Models\Cashbox;
-use App\Models\Category;
-use App\Models\Customer;
-use App\Models\Item;
-use App\Models\ItemInventory;
-use App\Models\PurchaseReturn;
-use App\Models\PurchaseReturnItem;
-use App\Models\SalesReturn;
-use App\Models\SalesReturnItem;
-use App\Models\Supplier;
-use App\Models\Unit;
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
+
 use App\Models\User;
 use App\Models\Warehouse;
 use App\Services\InventoryPostingService;
@@ -30,13 +18,13 @@ class Milestone9Test extends TestCase
     public function test_purchase_return_decrements_stock_and_reduces_supplier_ap_debt(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
         $cashbox = Cashbox::create(['name' => 'Main Cashbox', 'current_balance' => 1000.0]);
         $supplier = Supplier::create(['name' => 'Pyrex Supplier', 'balance' => 500.0]);
 
-        $item = Item::create(['category_id' => $category->id, 'base_unit_id' => $piece->id, 'sku' => 'PR-ITEM-01', 'name' => 'Pyrex Dish']);
+        $item = Item::create(['category_id' => $category->id, 'measurement_unit_id' => $unitGroup->id, 'sku' => 'PR-ITEM-01', 'name' => 'Pyrex Dish']);
 
         // Stock initial: 100 units @ $10.00
         $postingService = app(InventoryPostingService::class);
@@ -55,7 +43,7 @@ class Milestone9Test extends TestCase
         PurchaseReturnItem::create([
             'purchase_return_id' => $return->id,
             'item_id' => $item->id,
-            'unit_id' => $piece->id,
+            'measurement_unit_detail_id' => $piece->id,
             'quantity' => 20.0,
             'unit_price' => 10.0,
             'conversion_factor' => 1.0,
@@ -77,13 +65,13 @@ class Milestone9Test extends TestCase
     public function test_sales_return_increments_stock_recalculates_wac_and_reduces_customer_ar_debt(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
         $cashbox = Cashbox::create(['name' => 'POS Cashbox', 'current_balance' => 1000.0]);
         $customer = Customer::create(['name' => 'Ahram Client', 'balance' => 400.0]);
 
-        $item = Item::create(['category_id' => $category->id, 'base_unit_id' => $piece->id, 'sku' => 'SR-ITEM-01', 'name' => 'Pyrex Bowl']);
+        $item = Item::create(['category_id' => $category->id, 'measurement_unit_id' => $unitGroup->id, 'sku' => 'SR-ITEM-01', 'name' => 'Pyrex Bowl']);
 
         // Stock initial: 50 units @ $10.00
         $postingService = app(InventoryPostingService::class);
@@ -103,7 +91,7 @@ class Milestone9Test extends TestCase
         SalesReturnItem::create([
             'sales_return_id' => $return->id,
             'item_id' => $item->id,
-            'unit_id' => $piece->id,
+            'measurement_unit_detail_id' => $piece->id,
             'quantity' => 10.0,
             'unit_price' => 25.0,
             'conversion_factor' => 1.0,
@@ -121,3 +109,10 @@ class Milestone9Test extends TestCase
         $this->assertEquals(900.0, $cashbox->fresh()->current_balance); // $1000 - $100 cash refund
     }
 }
+
+
+
+
+
+
+

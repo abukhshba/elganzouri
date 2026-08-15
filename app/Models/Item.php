@@ -20,7 +20,7 @@ class Item extends Model
     protected $fillable = [
         'category_id',
         'brand_id',
-        'base_unit_id',
+        'measurement_unit_id',
         'sku',
         'barcode',
         'name',
@@ -44,14 +44,9 @@ class Item extends Model
         return $this->belongsTo(Brand::class);
     }
 
-    public function baseUnit(): BelongsTo
+    public function measurementUnit(): BelongsTo
     {
-        return $this->belongsTo(Unit::class, 'base_unit_id');
-    }
-
-    public function itemUnits(): HasMany
-    {
-        return $this->hasMany(ItemUnit::class);
+        return $this->belongsTo(MeasurementUnit::class);
     }
 
     public function prices(): HasMany

@@ -2,24 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Actions\Inventory\ProcessStockAdjustmentAction;
-use App\Actions\Inventory\ReceiveInventoryTransferAction;
-use App\Actions\Inventory\ShipInventoryTransferAction;
-use App\Enums\AdjustmentReason;
-use App\Enums\AdjustmentType;
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
 
-use App\Enums\InventoryTransactionType;
-use App\Enums\TransferStatus;
-use App\Exceptions\InsufficientStockException;
-use App\Models\Category;
-use App\Models\InventoryAdjustment;
-use App\Models\InventoryAdjustmentItem;
-use App\Models\InventoryTransaction;
-use App\Models\InventoryTransfer;
-use App\Models\InventoryTransferItem;
-use App\Models\Item;
-use App\Models\ItemInventory;
-use App\Models\Unit;
 use App\Models\User;
 use App\Models\Warehouse;
 use App\Services\InventoryPostingService;
@@ -33,12 +18,12 @@ class Milestone8Test extends TestCase
     public function test_two_phase_inter_warehouse_transfer_protocol(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Cookware', 'slug' => 'cookware']);
         $wh1 = Warehouse::create(['name' => 'Main Warehouse', 'code' => 'WH-1']);
         $wh2 = Warehouse::create(['name' => 'Branch Warehouse', 'code' => 'WH-2']);
 
-        $item = Item::create(['category_id' => $category->id, 'base_unit_id' => $piece->id, 'sku' => 'TRANSFER-ITEM-01', 'name' => 'Transfer Item']);
+        $item = Item::create(['category_id' => $category->id, 'measurement_unit_id' => $unitGroup->id, 'sku' => 'TRANSFER-ITEM-01', 'name' => 'Transfer Item']);
 
         $postingService = app(InventoryPostingService::class);
 
@@ -58,7 +43,7 @@ class Milestone8Test extends TestCase
         $transferItem = InventoryTransferItem::create([
             'inventory_transfer_id' => $transfer->id,
             'item_id' => $item->id,
-            'unit_id' => $piece->id,
+            'measurement_unit_detail_id' => $piece->id,
             'quantity' => 50.0,
             'conversion_factor' => 1.0,
             'base_quantity' => 50.0,
@@ -92,10 +77,10 @@ class Milestone8Test extends TestCase
     public function test_stock_adjustment_in_and_out_workflows(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Cookware', 'slug' => 'cookware']);
         $warehouse = Warehouse::create(['name' => 'Main Warehouse', 'code' => 'WH-1']);
-        $item = Item::create(['category_id' => $category->id, 'base_unit_id' => $piece->id, 'sku' => 'ADJ-ITEM-01', 'name' => 'Adjustment Item']);
+        $item = Item::create(['category_id' => $category->id, 'measurement_unit_id' => $unitGroup->id, 'sku' => 'ADJ-ITEM-01', 'name' => 'Adjustment Item']);
 
         $postingService = app(InventoryPostingService::class);
         $postingService->post($item->id, $warehouse->id, InventoryTransactionType::IN, 10.0, 50.0, $item, $user->id);
@@ -112,7 +97,7 @@ class Milestone8Test extends TestCase
         InventoryAdjustmentItem::create([
             'inventory_adjustment_id' => $adjIn->id,
             'item_id' => $item->id,
-            'unit_id' => $piece->id,
+            'measurement_unit_detail_id' => $piece->id,
             'quantity' => 5.0,
             'unit_cost' => 20.0,
             'conversion_factor' => 1.0,
@@ -136,7 +121,7 @@ class Milestone8Test extends TestCase
         InventoryAdjustmentItem::create([
             'inventory_adjustment_id' => $adjOut->id,
             'item_id' => $item->id,
-            'unit_id' => $piece->id,
+            'measurement_unit_detail_id' => $piece->id,
             'quantity' => 20.0,
             'unit_cost' => 0.0,
             'conversion_factor' => 1.0,
@@ -147,3 +132,10 @@ class Milestone8Test extends TestCase
         app(ProcessStockAdjustmentAction::class)->execute($adjOut, $user->id);
     }
 }
+
+
+
+
+
+
+

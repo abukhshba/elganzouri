@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
+
 use App\Models\Setting;
 use App\Models\User;
 use App\Services\DocumentNumberingService;
@@ -51,3 +54,9 @@ class Milestone1Test extends TestCase
         $this->assertEquals('INV-000001', $code3);
     }
 }
+
+
+
+
+
+

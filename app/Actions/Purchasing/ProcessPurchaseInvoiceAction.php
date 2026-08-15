@@ -33,20 +33,18 @@ class ProcessPurchaseInvoiceAction
             // 2. Iterate line items and post stock IN for each item
             foreach ($purchase->items as $purchaseItem) {
                 $baseQuantity = $this->uomService->convertQuantityToBaseUnit(
-                    $purchaseItem->item_id,
-                    $purchaseItem->unit_id,
+                    $purchaseItem->measurement_unit_detail_id,
                     (float) $purchaseItem->quantity
                 );
 
                 $baseUnitCost = $this->uomService->convertPriceToBaseUnit(
-                    $purchaseItem->item_id,
-                    $purchaseItem->unit_id,
+                    $purchaseItem->measurement_unit_detail_id,
                     (float) $purchaseItem->unit_price
                 );
 
                 // Update purchase line item base calculations
                 $purchaseItem->update([
-                    'conversion_factor' => $this->uomService->getConversionFactor($purchaseItem->item_id, $purchaseItem->unit_id),
+                    'conversion_factor' => $this->uomService->getConversionFactor($purchaseItem->measurement_unit_detail_id),
                     'base_quantity' => $baseQuantity,
                     'base_unit_cost' => $baseUnitCost,
                     'line_total' => round((float) $purchaseItem->quantity * (float) $purchaseItem->unit_price, 4),

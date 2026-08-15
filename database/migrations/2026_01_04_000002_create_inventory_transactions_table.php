@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('item_inventory_id')->constrained('item_inventories');
             $table->foreignId('warehouse_id')->constrained('warehouses');
             $table->foreignId('item_id')->constrained('items');
-            $table->foreignId('base_unit_id')->constrained('units');
+            $table->foreignId('measurement_unit_detail_id')->constrained('measurement_unit_details');
             $table->string('transaction_type', 30);
             $table->decimal('quantity', 15, 4);
             $table->decimal('unit_cost', 15, 4);

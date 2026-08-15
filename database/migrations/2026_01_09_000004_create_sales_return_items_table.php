@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sales_return_id')->constrained('sales_returns')->onDelete('cascade');
             $table->foreignId('item_id')->constrained('items');
-            $table->foreignId('unit_id')->constrained('units');
+            $table->foreignId('measurement_unit_detail_id')->constrained('measurement_unit_details');
             $table->decimal('quantity', 15, 4);
             $table->decimal('unit_price', 15, 4);
             $table->decimal('unit_cost', 15, 4)->default(0.0000); // WAC returned to stock

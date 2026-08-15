@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
+
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
 use App\Models\Cashbox;
@@ -10,7 +13,6 @@ use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Item;
 use App\Models\Sale;
-use App\Models\Unit;
 use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -46,7 +48,7 @@ class SalesFormTest extends TestCase
                 [
                     'item_id' => $item->id,
                     'warehouse_id' => $warehouse->id,
-                    'unit_id' => $unit->id,
+                    'measurement_unit_detail_id' => $unit->id,
                     'quantity' => 2,
                     'unit_price' => 100.0,
                 ],
@@ -100,7 +102,7 @@ class SalesFormTest extends TestCase
                 [
                     'item_id' => $item->id,
                     'warehouse_id' => $warehouse->id,
-                    'unit_id' => $unit->id,
+                    'measurement_unit_detail_id' => $unit->id,
                     'quantity' => 5,
                     'unit_price' => 200.0,
                 ],
@@ -153,7 +155,7 @@ class SalesFormTest extends TestCase
                 [
                     'item_id' => $item->id,
                     'warehouse_id' => $warehouse->id,
-                    'unit_id' => $unit->id,
+                    'measurement_unit_detail_id' => $unit->id,
                     'quantity' => 2,
                     'unit_price' => 500.0,
                 ],
@@ -181,3 +183,9 @@ class SalesFormTest extends TestCase
         $this->assertEquals(PaymentStatus::PARTIAL, $sale->payment_status);
     }
 }
+
+
+
+
+
+

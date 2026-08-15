@@ -2,10 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
-use App\Models\Item;
-use App\Models\ItemInventory;
-use App\Models\Unit;
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
+
 use App\Models\Warehouse;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,13 +16,13 @@ class Milestone4ATest extends TestCase
 
     public function test_item_inventory_snapshot_creation_and_available_quantity(): void
     {
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
 
         $item = Item::create([
             'category_id' => $category->id,
-            'base_unit_id' => $piece->id,
+            'measurement_unit_id' => $unitGroup->id,
             'sku' => 'ITEM-SNAP-01',
             'name' => 'Snapshot Test Item',
         ]);
@@ -46,13 +45,13 @@ class Milestone4ATest extends TestCase
 
     public function test_unique_item_warehouse_constraint(): void
     {
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
 
         $item = Item::create([
             'category_id' => $category->id,
-            'base_unit_id' => $piece->id,
+            'measurement_unit_id' => $unitGroup->id,
             'sku' => 'ITEM-SNAP-02',
             'name' => 'Duplicate Test Item',
         ]);
@@ -74,12 +73,12 @@ class Milestone4ATest extends TestCase
 
     public function test_low_stock_query_scope(): void
     {
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Glassware', 'slug' => 'glassware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
 
-        $item1 = Item::create(['category_id' => $category->id, 'base_unit_id' => $piece->id, 'sku' => 'I1', 'name' => 'Item 1']);
-        $item2 = Item::create(['category_id' => $category->id, 'base_unit_id' => $piece->id, 'sku' => 'I2', 'name' => 'Item 2']);
+        $item1 = Item::create(['category_id' => $category->id, 'measurement_unit_id' => $unitGroup->id, 'sku' => 'I1', 'name' => 'Item 1']);
+        $item2 = Item::create(['category_id' => $category->id, 'measurement_unit_id' => $unitGroup->id, 'sku' => 'I2', 'name' => 'Item 2']);
 
         // Item 1: Stock 5 <= Min 10 (Low Stock)
         ItemInventory::create(['item_id' => $item1->id, 'warehouse_id' => $warehouse->id, 'current_quantity' => 5.0, 'minimum_quantity' => 10.0]);
@@ -93,3 +92,10 @@ class Milestone4ATest extends TestCase
         $this->assertEquals($item1->id, $lowStockItems->first()->item_id);
     }
 }
+
+
+
+
+
+
+

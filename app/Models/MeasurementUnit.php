@@ -5,11 +5,10 @@ namespace App\Models;
 use App\Traits\HasBilingualFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
 
-class UnitGroup extends Model
+class MeasurementUnit extends Model
 {
     use HasFactory, HasTranslations, HasBilingualFields;
 
@@ -17,21 +16,16 @@ class UnitGroup extends Model
 
     protected $fillable = [
         'name',
-        'base_unit_id',
-        'is_active',
+        'slug',
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
-
-    public function baseUnit(): BelongsTo
+    public function details(): HasMany
     {
-        return $this->belongsTo(Unit::class, 'base_unit_id');
+        return $this->hasMany(MeasurementUnitDetail::class);
     }
 
-    public function units(): HasMany
+    public function items(): HasMany
     {
-        return $this->hasMany(Unit::class, 'unit_group_id');
+        return $this->hasMany(Item::class);
     }
 }

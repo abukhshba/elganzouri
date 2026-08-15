@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
+
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -16,3 +19,9 @@ class ExampleTest extends TestCase
         $response->assertRedirect('/admin');
     }
 }
+
+
+
+
+
+

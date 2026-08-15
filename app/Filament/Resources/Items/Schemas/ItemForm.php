@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Items\Schemas;
 
 use App\Models\Item;
+
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -47,9 +48,9 @@ class ItemForm
                         ->searchable()
                         ->preload()
                         ->nullable(),
-                    Select::make('base_unit_id')
-                        ->label(__('erp.fields.base_unit'))
-                        ->relationship('baseUnit', 'name')
+                    Select::make('measurement_unit_id')
+                        ->label(__('erp.nav_group.catalog_settings'))
+                        ->relationship('measurementUnit', 'name')
                         ->searchable()
                         ->preload()
                         ->required()

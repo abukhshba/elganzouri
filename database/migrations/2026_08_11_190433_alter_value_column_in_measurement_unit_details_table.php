@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('unit_groups', function (Blueprint $table) {
-            $table->id();
-            $table->text('name');
-            $table->unsignedBigInteger('base_unit_id')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
+        Schema::table('measurement_unit_details', function (Blueprint $table) {
+            $table->decimal('value', 16, 6)->default(1)->change();
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('unit_groups');
+        Schema::table('measurement_unit_details', function (Blueprint $table) {
+            $table->decimal('value', 15, 6)->default(1)->change();
+        });
     }
 };

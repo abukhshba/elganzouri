@@ -11,7 +11,7 @@ use App\Models\CashboxTransaction;
 use App\Models\Customer;
 use App\Models\Item;
 use App\Models\Sale;
-use App\Models\Unit;
+
 use App\Services\UomConversionService;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Validation\ValidationException;
@@ -54,10 +54,10 @@ class CreateSale extends CreateRecord
 
             // Compute UOM Conversion & COGS
             $itemModel = ! empty($item['item_id']) ? Item::find($item['item_id']) : null;
-            $unitModel = ! empty($item['unit_id']) ? Unit::find($item['unit_id']) : null;
+            $unitModel = ! empty($item['measurement_unit_detail_id']) ? \App\Models\MeasurementUnitDetail::find($item['measurement_unit_detail_id']) : null;
 
             if ($itemModel && $unitModel) {
-                $factor = $conversionService->resolveConversionFactor($itemModel, $unitModel);
+                $factor = $conversionService->resolveConversionFactor($unitModel);
             } else {
                 $factor = 1.0;
             }

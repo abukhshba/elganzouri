@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('categories');
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
-            $table->foreignId('base_unit_id')->constrained('units');
+            $table->foreignId('measurement_unit_id')->constrained('measurement_units');
             $table->string('sku', 60)->unique();
             $table->string('barcode', 60)->nullable()->index();
             $table->text('name');

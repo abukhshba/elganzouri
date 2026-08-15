@@ -53,8 +53,7 @@ class ProcessSaleInvoiceAction
             // 3. Iterate line items and post stock OUT for each item
             foreach ($sale->items as $saleItem) {
                 $baseQuantity = $this->uomService->convertQuantityToBaseUnit(
-                    $saleItem->item_id,
-                    $saleItem->unit_id,
+                    $saleItem->measurement_unit_detail_id,
                     (float) $saleItem->quantity
                 );
 
@@ -76,7 +75,7 @@ class ProcessSaleInvoiceAction
                 $lineProfit = round($lineTotal - $lineCogs, 4);
 
                 $saleItem->update([
-                    'conversion_factor' => $this->uomService->getConversionFactor($saleItem->item_id, $saleItem->unit_id),
+                    'conversion_factor' => $this->uomService->getConversionFactor($saleItem->measurement_unit_detail_id),
                     'base_quantity' => $baseQuantity,
                     'base_unit_cost' => $capturedWac,
                     'line_total' => $lineTotal,

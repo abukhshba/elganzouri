@@ -37,8 +37,7 @@ class ProcessSalesReturnAction
 
             foreach ($return->items as $item) {
                 $baseQuantity = $this->uomService->convertQuantityToBaseUnit(
-                    $item->item_id,
-                    $item->unit_id,
+                    $item->measurement_unit_detail_id,
                     (float) $item->quantity
                 );
 
@@ -63,7 +62,7 @@ class ProcessSalesReturnAction
                 $lineCogs = round($baseQuantity * $returnUnitCost, 4);
 
                 $item->update([
-                    'conversion_factor' => $this->uomService->getConversionFactor($item->item_id, $item->unit_id),
+                    'conversion_factor' => $this->uomService->getConversionFactor($item->measurement_unit_detail_id),
                     'base_quantity' => $baseQuantity,
                     'unit_cost' => $returnUnitCost,
                     'line_total' => $lineTotal,

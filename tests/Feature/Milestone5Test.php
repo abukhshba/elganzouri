@@ -2,17 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Actions\Purchasing\ProcessPurchaseInvoiceAction;
-use App\Enums\PurchaseStatus;
-use App\Models\Category;
-use App\Models\InventoryTransaction;
-use App\Models\Item;
-use App\Models\ItemInventory;
-use App\Models\ItemUnit;
-use App\Models\Purchase;
-use App\Models\PurchaseItem;
-use App\Models\Supplier;
-use App\Models\Unit;
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
+
 use App\Models\User;
 use App\Models\Warehouse;
 use Exception;
@@ -26,14 +18,14 @@ class Milestone5Test extends TestCase
     public function test_draft_purchase_does_not_affect_inventory_or_supplier_balance(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Cookware', 'slug' => 'cookware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
         $supplier = Supplier::create(['name' => 'Pyrex Vendor', 'balance' => 0.0]);
 
         $item = Item::create([
             'category_id' => $category->id,
-            'base_unit_id' => $piece->id,
+            'measurement_unit_id' => $unitGroup->id,
             'sku' => 'ITEM-PO-01',
             'name' => 'Pyrex Dish',
         ]);
@@ -52,7 +44,7 @@ class Milestone5Test extends TestCase
         PurchaseItem::create([
             'purchase_id' => $purchase->id,
             'item_id' => $item->id,
-            'unit_id' => $piece->id,
+            'measurement_unit_detail_id' => $piece->id,
             'quantity' => 10.0,
             'unit_price' => 100.0,
             'conversion_factor' => 1.0,
@@ -70,7 +62,7 @@ class Milestone5Test extends TestCase
     public function test_confirming_purchase_converts_uom_posts_stock_in_and_updates_supplier_balance(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $carton = Unit::create(['name' => 'Carton', 'short_name' => 'ctn']);
         $category = Category::create(['name' => 'Cookware', 'slug' => 'cookware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
@@ -78,7 +70,7 @@ class Milestone5Test extends TestCase
 
         $item = Item::create([
             'category_id' => $category->id,
-            'base_unit_id' => $piece->id,
+            'measurement_unit_id' => $unitGroup->id,
             'sku' => 'ITEM-PO-02',
             'name' => 'Pyrex Glass Bowl',
         ]);
@@ -133,12 +125,12 @@ class Milestone5Test extends TestCase
     public function test_confirming_non_draft_purchase_throws_exception(): void
     {
         $user = User::factory()->create();
-        $piece = Unit::create(['name' => 'Piece', 'short_name' => 'pc']);
+        $unitGroup = MeasurementUnit::create(['name' => 'Packaging', 'slug' => 'packaging']); $piece = MeasurementUnitDetail::create(['measurement_unit_id' => $unitGroup->id, 'name' => 'Piece', 'unit_type' => 'numbers', 'is_default' => true, 'value' => 1]);
         $category = Category::create(['name' => 'Cookware', 'slug' => 'cookware']);
         $warehouse = Warehouse::create(['name' => 'Main WH', 'code' => 'WH-M']);
         $supplier = Supplier::create(['name' => 'Pyrex Vendor', 'balance' => 0.0]);
 
-        $item = Item::create(['category_id' => $category->id, 'base_unit_id' => $piece->id, 'sku' => 'ITEM-PO-03', 'name' => 'Item 3']);
+        $item = Item::create(['category_id' => $category->id, 'measurement_unit_id' => $unitGroup->id, 'sku' => 'ITEM-PO-03', 'name' => 'Item 3']);
 
         $purchase = Purchase::create([
             'supplier_id' => $supplier->id,
@@ -155,3 +147,10 @@ class Milestone5Test extends TestCase
         $action->execute($purchase, $user->id);
     }
 }
+
+
+
+
+
+
+

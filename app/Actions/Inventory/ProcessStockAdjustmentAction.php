@@ -32,14 +32,12 @@ class ProcessStockAdjustmentAction
 
             foreach ($adjustment->items as $item) {
                 $baseQuantity = $this->uomService->convertQuantityToBaseUnit(
-                    $item->item_id,
-                    $item->unit_id,
+                    $item->measurement_unit_detail_id,
                     (float) $item->quantity
                 );
 
                 $baseUnitCost = $this->uomService->convertPriceToBaseUnit(
-                    $item->item_id,
-                    $item->unit_id,
+                    $item->measurement_unit_detail_id,
                     (float) $item->unit_cost
                 );
 
@@ -57,7 +55,7 @@ class ProcessStockAdjustmentAction
                 );
 
                 $item->update([
-                    'conversion_factor' => $this->uomService->getConversionFactor($item->item_id, $item->unit_id),
+                    'conversion_factor' => $this->uomService->getConversionFactor($item->measurement_unit_detail_id),
                     'base_quantity' => $baseQuantity,
                     'line_total' => round((float) $item->quantity * (float) $item->unit_cost, 4),
                 ]);

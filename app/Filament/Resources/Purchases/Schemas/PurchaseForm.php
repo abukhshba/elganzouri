@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Purchases\Schemas;
 
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
+use App\Models\Item;
+
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -66,10 +68,34 @@ class PurchaseForm
                                     ->relationship('item', 'name')
                                     ->searchable()
                                     ->preload()
-                                    ->required(),
-                                Select::make('unit_id')
+                                    ->required()
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, $set) {
+                                        if ($state) {
+                                            $item = Item::with('measurementUnit.details')->find($state);
+                                            if ($item && $item->measurementUnit) {
+                                                $defaultDetail = $item->measurementUnit->details->where('is_default', true)->first();
+                                                if ($defaultDetail) {
+                                                    $set('measurement_unit_detail_id', $defaultDetail->id);
+                                                }
+                                            }
+                                        }
+                                    }),
+                                Select::make('measurement_unit_detail_id')
                                     ->label(__('erp.resources.unit'))
-                                    ->relationship('unit', 'name')
+                                    ->options(function ($get) {
+                                        $itemId = $get('item_id');
+                                        if (! $itemId) {
+                                            return \App\Models\MeasurementUnitDetail::pluck('name', 'id');
+                                        }
+
+                                        $item = Item::with('measurementUnit.details')->find($itemId);
+                                        if (! $item || ! $item->measurementUnit) {
+                                            return \App\Models\MeasurementUnitDetail::pluck('name', 'id');
+                                        }
+
+                                        return $item->measurementUnit->details->pluck('name', 'id');
+                                    })
                                     ->searchable()
                                     ->preload()
                                     ->required(),

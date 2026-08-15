@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
+
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\PaymentTerm;
 use App\Models\Tax;
-use App\Models\Unit;
 use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -54,3 +56,9 @@ class Milestone2Test extends TestCase
         $this->assertEquals(14.0, $tax->rate_percentage);
     }
 }
+
+
+
+
+
+

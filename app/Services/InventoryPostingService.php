@@ -85,7 +85,7 @@ class InventoryPostingService
                 'item_inventory_id' => $inventory->id,
                 'warehouse_id' => $warehouseId,
                 'item_id' => $itemId,
-                'base_unit_id' => $item->base_unit_id,
+                'measurement_unit_detail_id' => $item->measurementUnit?->details()->where('is_default', true)->first()?->id,
                 'transaction_type' => $type,
                 'quantity' => $quantityBase,
                 'unit_cost' => $appliedUnitCost,

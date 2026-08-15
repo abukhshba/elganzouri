@@ -6,9 +6,9 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\ItemPrice;
-use App\Models\ItemUnit;
+use App\Models\MeasurementUnit;
+use App\Models\MeasurementUnitDetail;
 use App\Models\PriceList;
-use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
 class ItemSeeder extends Seeder
@@ -18,9 +18,11 @@ class ItemSeeder extends Seeder
      */
     public function run(): void
     {
-        $piece = Unit::where('short_name', 'pc')->first();
-        $pack = Unit::where('short_name', 'pk')->first();
-        $carton = Unit::where('short_name', 'ctn')->first();
+        $packagingGroup = MeasurementUnit::where('slug', 'packaging')->first();
+        
+        $piece = MeasurementUnitDetail::where('name->en', 'Piece')->first();
+        $carton24 = MeasurementUnitDetail::where('name->en', 'Carton - 24 pcs')->first();
+        $carton72 = MeasurementUnitDetail::where('name->en', 'Carton - 72 pcs')->first();
 
         $cookwareCat = Category::where('slug', 'cookware-kitchenware')->first();
         $glasswareCat = Category::where('slug', 'glassware-thermal')->first();
@@ -38,12 +40,12 @@ class ItemSeeder extends Seeder
                 'description' => ['ar' => 'كوب سيراميك حراري ملون 350 مل', 'en' => 'Heat resistant colored ceramic cup 350ml'],
                 'category_id' => $glasswareCat?->id,
                 'brand_id' => $pyrexBrand?->id,
-                'base_unit_id' => $piece?->id,
+                'measurement_unit_id' => $packagingGroup?->id,
                 'min_stock_alert' => 20.0000,
                 'is_active' => true,
-                'units' => [
-                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 45.0],
-                    ['unit_id' => $carton?->id, 'conversion_factor' => 72.0, 'sale_price' => 3100.0],
+                'prices' => [
+                    ['unit_id' => $piece?->id, 'sale_price' => 45.0],
+                    ['unit_id' => $carton72?->id, 'sale_price' => 3100.0],
                 ],
             ],
             [
@@ -53,83 +55,30 @@ class ItemSeeder extends Seeder
                 'description' => ['ar' => 'طبق عشاء كبير مقاس 26 سم', 'en' => 'Large dinner plate 26cm'],
                 'category_id' => $glasswareCat?->id,
                 'brand_id' => $pyrexBrand?->id,
-                'base_unit_id' => $piece?->id,
+                'measurement_unit_id' => $packagingGroup?->id,
                 'min_stock_alert' => 15.0000,
                 'is_active' => true,
-                'units' => [
-                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 85.0],
-                    ['unit_id' => $carton?->id, 'conversion_factor' => 24.0, 'sale_price' => 1950.0],
-                ],
-            ],
-            [
-                'sku' => 'SPOONS-STAINLESS-01',
-                'barcode' => '629100000005',
-                'name' => ['ar' => 'ملعقة طعام استانلس ستيل', 'en' => 'Spoons'],
-                'description' => ['ar' => 'طقم ملاعق استانلس غير قابل للصدأ', 'en' => 'Stainless steel dinner spoon'],
-                'category_id' => $cookwareCat?->id,
-                'brand_id' => $tefalBrand?->id,
-                'base_unit_id' => $piece?->id,
-                'min_stock_alert' => 50.0000,
-                'is_active' => true,
-                'units' => [
-                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 15.0],
-                    ['unit_id' => $carton?->id, 'conversion_factor' => 144.0, 'sale_price' => 2000.0],
-                ],
-            ],
-            [
-                'sku' => 'PYREX-BOWL-3L',
-                'barcode' => '629100000001',
-                'name' => ['ar' => 'وعاء زجاجي فرنسي حراري بايركس 3 لتر', 'en' => 'Pyrex French Thermal Glass Bowl 3L'],
-                'description' => ['ar' => 'وعاء بيضاوي مقاوم للحرارة سعة 3 لتر مصنوع في فرنسا', 'en' => 'Heat resistant oval bowl 3 liters capacity made in France'],
-                'category_id' => $glasswareCat?->id,
-                'brand_id' => $pyrexBrand?->id,
-                'base_unit_id' => $piece?->id,
-                'min_stock_alert' => 10.0000,
-                'is_active' => true,
-                'units' => [
-                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 250.0],
-                    ['unit_id' => $carton?->id, 'conversion_factor' => 12.0, 'sale_price' => 2800.0],
-                ],
-            ],
-            [
-                'sku' => 'TEFAL-FRYPAN-28',
-                'barcode' => '629100000002',
-                'name' => ['ar' => 'مقلاة تيفال سينسـيشن مقاس 28 سم غير لاصقة', 'en' => 'Tefal Sensation Non-Stick Frying Pan 28cm'],
-                'description' => ['ar' => 'مقلاة مصنوعة من الألمنيوم عالي الجودة مع طبقة تيتانيوم غير لاصقة', 'en' => 'High quality aluminum pan with titanium non-stick layer'],
-                'category_id' => $cookwareCat?->id,
-                'brand_id' => $tefalBrand?->id,
-                'base_unit_id' => $piece?->id,
-                'min_stock_alert' => 5.0000,
-                'is_active' => true,
-                'units' => [
-                    ['unit_id' => $piece?->id, 'conversion_factor' => 1.0, 'sale_price' => 850.0],
-                    ['unit_id' => $pack?->id, 'conversion_factor' => 6.0, 'sale_price' => 4900.0],
+                'prices' => [
+                    ['unit_id' => $piece?->id, 'sale_price' => 85.0],
+                    ['unit_id' => $carton24?->id, 'sale_price' => 1950.0],
                 ],
             ],
         ];
 
         foreach ($items as $itemData) {
-            $units = $itemData['units'];
-            unset($itemData['units']);
+            $prices = $itemData['prices'];
+            unset($itemData['prices']);
 
             $item = Item::firstOrCreate(['sku' => $itemData['sku']], $itemData);
 
-            foreach ($units as $u) {
-                $itemUnit = ItemUnit::firstOrCreate([
-                    'item_id' => $item->id,
-                    'unit_id' => $u['unit_id'],
-                ], [
-                    'conversion_factor' => $u['conversion_factor'],
-                    'sale_price' => $u['sale_price'],
-                ]);
-
-                if ($retailList) {
+            if ($retailList) {
+                foreach ($prices as $p) {
                     ItemPrice::firstOrCreate([
                         'price_list_id' => $retailList->id,
                         'item_id' => $item->id,
-                        'item_unit_id' => $itemUnit->id,
+                        'measurement_unit_detail_id' => $p['unit_id'],
                     ], [
-                        'price' => $u['sale_price'],
+                        'price' => $p['sale_price'],
                     ]);
                 }
             }

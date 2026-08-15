@@ -102,5 +102,16 @@ return [
         'avg_cost' => 'متوسط التكلفة المرجح WAC (ج.م)',
         'timestamp' => 'تاريخ ووقت الحركة',
         'created_at' => 'تاريخ الإنشاء',
+        'new_customer' => 'عميل جديد',
+        'payment' => 'الدفع',
+        'paid_in_full' => 'مدفوع بالكامل',
+        'paid_amount' => 'المبلغ المدفوع (ج.م)',
+        'unit_type' => 'نوع الوحدة',
+        'is_default' => 'وحدة افتراضية',
+        'value' => 'معامل التحويل',
+    ],
+
+    'validation' => [
+        'unique_conversion_value' => 'توجد وحدة بنفس معامل التحويل بالفعل.',
     ],
 ];
