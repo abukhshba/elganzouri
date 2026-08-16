@@ -11,31 +11,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+
 class Sale extends Model
 {
     use HasFactory, GeneratesDocumentCode;
 
     protected string $documentCodeColumn = 'invoice_number';
 
-    protected $fillable = [
-        'invoice_number',
-        'customer_id',
-        'warehouse_id',
-        'cashbox_id',
-        'status',
-        'payment_status',
-        'total_amount',
-        'tax_amount',
-        'discount_amount',
-        'paid_amount',
-        'due_amount',
-        'total_cogs',
-        'total_profit',
-        'issue_date',
-        'due_date',
-        'user_id',
-        'notes',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'status' => SaleStatus::class,
@@ -79,5 +63,19 @@ class Sale extends Model
     public function items(): HasMany
     {
         return $this->hasMany(SaleItem::class);
+    }
+
+    public function payments(): MorphMany
+    {
+        return $this->morphMany(CashboxTransaction::class, 'reference');
+    }
+
+    /**
+     * Get the remaining balance that can still be paid on this invoice.
+     */
+    public function getRemainingBalanceAttribute(): float
+    {
+        $totalPaid = (float) $this->payments()->sum('amount');
+        return max(0, (float) $this->total_amount - $totalPaid);
     }
 }

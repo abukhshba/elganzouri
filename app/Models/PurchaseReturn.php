@@ -16,17 +16,7 @@ class PurchaseReturn extends Model
 
     protected string $documentCodeColumn = 'return_number';
 
-    protected $fillable = [
-        'return_number',
-        'purchase_id',
-        'supplier_id',
-        'warehouse_id',
-        'status',
-        'total_amount',
-        'refunded_amount',
-        'user_id',
-        'notes',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'status' => ReturnStatus::class,

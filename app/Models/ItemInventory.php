@@ -12,20 +12,7 @@ class ItemInventory extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'item_id',
-        'warehouse_id',
-        'current_quantity',
-        'reserved_quantity',
-        'average_cost',
-        'stock_value',
-        'last_purchase_price',
-        'last_sale_price',
-        'minimum_quantity',
-        'maximum_quantity',
-        'reorder_quantity',
-        'last_transaction_id',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'current_quantity' => DecimalCast::class,

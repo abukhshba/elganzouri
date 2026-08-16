@@ -9,12 +9,7 @@ class Setting extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'key',
-        'value',
-        'group',
-        'type',
-    ];
+    protected $guarded = [];
 
     /**
      * Get a setting value by key with fallback default.

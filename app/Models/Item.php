@@ -17,17 +17,7 @@ class Item extends Model
 
     public array $translatable = ['name', 'description'];
 
-    protected $fillable = [
-        'category_id',
-        'brand_id',
-        'measurement_unit_id',
-        'sku',
-        'barcode',
-        'name',
-        'description',
-        'min_stock_alert',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'min_stock_alert' => DecimalCast::class,

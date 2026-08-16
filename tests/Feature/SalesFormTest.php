@@ -31,7 +31,7 @@ class SalesFormTest extends TestCase
     {
         $warehouse = Warehouse::first();
         $item = Item::first();
-        $unit = Unit::first();
+        $unit = MeasurementUnitDetail::first();
 
         $this->assertDatabaseMissing('customers', [
             'name' => 'العميل الجديد للاختبار',
@@ -63,8 +63,10 @@ class SalesFormTest extends TestCase
 
         $processedData = $method->invoke($page, $saleData);
 
+        $itemsData = $processedData['items'] ?? [];
+        unset($processedData['items']);
         $sale = Sale::create($processedData);
-        $sale->items()->createMany($processedData['items']);
+        $sale->items()->createMany($itemsData);
 
         $page->record = $sale;
         $afterMethod = $reflection->getMethod('afterCreate');
@@ -90,7 +92,7 @@ class SalesFormTest extends TestCase
         $warehouse = Warehouse::first();
         $cashbox = Cashbox::first();
         $item = Item::first();
-        $unit = Unit::first();
+        $unit = MeasurementUnitDetail::first();
 
         $initialBalance = (float) $cashbox->balance;
 
@@ -116,8 +118,10 @@ class SalesFormTest extends TestCase
 
         $processedData = $method->invoke($page, $saleData);
 
+        $itemsData = $processedData['items'] ?? [];
+        unset($processedData['items']);
         $sale = Sale::create($processedData);
-        $sale->items()->createMany($processedData['items']);
+        $sale->items()->createMany($itemsData);
 
         $page->record = $sale;
         $afterMethod = $reflection->getMethod('afterCreate');
@@ -144,7 +148,7 @@ class SalesFormTest extends TestCase
         $warehouse = Warehouse::first();
         $cashbox = Cashbox::first();
         $item = Item::first();
-        $unit = Unit::first();
+        $unit = MeasurementUnitDetail::first();
 
         $saleData = [
             'customer_id' => $customer->id,
@@ -169,8 +173,10 @@ class SalesFormTest extends TestCase
 
         $processedData = $method->invoke($page, $saleData);
 
+        $itemsData = $processedData['items'] ?? [];
+        unset($processedData['items']);
         $sale = Sale::create($processedData);
-        $sale->items()->createMany($processedData['items']);
+        $sale->items()->createMany($itemsData);
 
         $page->record = $sale;
         $afterMethod = $reflection->getMethod('afterCreate');

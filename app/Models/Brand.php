@@ -15,12 +15,7 @@ class Brand extends Model
 
     public array $translatable = ['name', 'description'];
 
-    protected $fillable = [
-        'slug',
-        'name',
-        'description',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'is_active' => 'boolean',

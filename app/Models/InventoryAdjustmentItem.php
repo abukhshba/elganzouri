@@ -11,16 +11,7 @@ class InventoryAdjustmentItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'inventory_adjustment_id',
-        'item_id',
-        'unit_id',
-        'quantity',
-        'unit_cost',
-        'conversion_factor',
-        'base_quantity',
-        'line_total',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'quantity' => DecimalCast::class,

@@ -11,15 +11,7 @@ class InventoryTransferItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'inventory_transfer_id',
-        'item_id',
-        'unit_id',
-        'quantity',
-        'conversion_factor',
-        'base_quantity',
-        'shipped_wac',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'quantity' => DecimalCast::class,

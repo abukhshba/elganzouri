@@ -14,16 +14,7 @@ class Expense extends Model
 
     protected string $documentCodeColumn = 'expense_number';
 
-    protected $fillable = [
-        'expense_number',
-        'expense_category_id',
-        'cashbox_id',
-        'amount',
-        'expense_date',
-        'user_id',
-        'reference_number',
-        'notes',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'amount' => DecimalCast::class,

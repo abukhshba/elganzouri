@@ -12,13 +12,7 @@ class PriceList extends Model
 
     public array $translatable = ['name'];
 
-    protected $fillable = [
-        'name',
-        'code',
-        'currency',
-        'is_active',
-        'is_default',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'is_active' => 'boolean',

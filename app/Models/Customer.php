@@ -13,17 +13,7 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'phone',
-        'address',
-        'tax_number',
-        'payment_term_id',
-        'credit_limit',
-        'balance',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'credit_limit' => DecimalCast::class,

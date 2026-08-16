@@ -15,13 +15,7 @@ class MeasurementUnitDetail extends Model
 
     public array $translatable = ['name'];
 
-    protected $fillable = [
-        'measurement_unit_id',
-        'name',
-        'unit_type',
-        'is_default',
-        'value',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'is_default' => 'boolean',

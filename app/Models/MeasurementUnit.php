@@ -14,10 +14,7 @@ class MeasurementUnit extends Model
 
     public array $translatable = ['name'];
 
-    protected $fillable = [
-        'name',
-        'slug',
-    ];
+    protected $guarded = [];
 
     public function details(): HasMany
     {

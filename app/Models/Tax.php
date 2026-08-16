@@ -15,12 +15,7 @@ class Tax extends Model
 
     public array $translatable = ['name'];
 
-    protected $fillable = [
-        'name',
-        'code',
-        'rate_percentage',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'rate_percentage' => DecimalCast::class,

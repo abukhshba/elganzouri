@@ -11,16 +11,7 @@ class ItemPrice extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'price_list_id',
-        'item_id',
-        'item_unit_id',
-        'price',
-        'min_quantity',
-        'start_date',
-        'end_date',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'price' => DecimalCast::class,

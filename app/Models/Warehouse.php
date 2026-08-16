@@ -16,14 +16,7 @@ class Warehouse extends Model
 
     public array $translatable = ['name', 'description'];
 
-    protected $fillable = [
-        'code',
-        'name',
-        'phone',
-        'address',
-        'description',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'is_active' => 'boolean',

@@ -12,14 +12,7 @@ class Cashbox extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'warehouse_id',
-        'user_id',
-        'current_balance',
-        'balance',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'current_balance' => DecimalCast::class,

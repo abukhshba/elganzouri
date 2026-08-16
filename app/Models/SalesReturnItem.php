@@ -11,18 +11,7 @@ class SalesReturnItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'sales_return_id',
-        'item_id',
-        'unit_id',
-        'quantity',
-        'unit_price',
-        'unit_cost',
-        'conversion_factor',
-        'base_quantity',
-        'line_total',
-        'line_cogs',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'quantity' => DecimalCast::class,
@@ -42,6 +31,11 @@ class SalesReturnItem extends Model
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function measurementUnitDetail(): BelongsTo
+    {
+        return $this->belongsTo(MeasurementUnitDetail::class, 'measurement_unit_detail_id');
     }
 
     public function unit(): BelongsTo

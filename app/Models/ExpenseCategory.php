@@ -14,11 +14,7 @@ class ExpenseCategory extends Model
 
     public array $translatable = ['name', 'description'];
 
-    protected $fillable = [
-        'code',
-        'name',
-        'description',
-    ];
+    protected $guarded = [];
 
     public function expenses(): HasMany
     {

@@ -17,22 +17,7 @@ class Purchase extends Model
 
     protected string $documentCodeColumn = 'purchase_number';
 
-    protected $fillable = [
-        'purchase_number',
-        'supplier_id',
-        'warehouse_id',
-        'status',
-        'payment_status',
-        'total_amount',
-        'tax_amount',
-        'discount_amount',
-        'paid_amount',
-        'due_amount',
-        'issue_date',
-        'due_date',
-        'user_id',
-        'notes',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'status' => PurchaseStatus::class,

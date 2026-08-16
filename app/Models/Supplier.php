@@ -13,17 +13,7 @@ class Supplier extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        'name',
-        'company_name',
-        'email',
-        'phone',
-        'address',
-        'tax_number',
-        'payment_term_id',
-        'balance',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'balance' => DecimalCast::class,

@@ -14,13 +14,7 @@ class PaymentTerm extends Model
 
     public array $translatable = ['name', 'description'];
 
-    protected $fillable = [
-        'name',
-        'days_due',
-        'description',
-        'is_active',
-        'is_default',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'days_due' => 'integer',

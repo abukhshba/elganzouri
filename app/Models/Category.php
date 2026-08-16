@@ -16,13 +16,7 @@ class Category extends Model
 
     public array $translatable = ['name', 'description'];
 
-    protected $fillable = [
-        'parent_id',
-        'slug',
-        'name',
-        'description',
-        'is_active',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'is_active' => 'boolean',

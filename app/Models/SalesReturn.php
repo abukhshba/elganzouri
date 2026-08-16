@@ -16,19 +16,7 @@ class SalesReturn extends Model
 
     protected string $documentCodeColumn = 'return_number';
 
-    protected $fillable = [
-        'return_number',
-        'sale_id',
-        'customer_id',
-        'warehouse_id',
-        'cashbox_id',
-        'status',
-        'total_amount',
-        'refunded_amount',
-        'total_cogs',
-        'user_id',
-        'notes',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'status' => ReturnStatus::class,

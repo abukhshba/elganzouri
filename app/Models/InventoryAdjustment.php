@@ -17,15 +17,7 @@ class InventoryAdjustment extends Model
 
     protected string $documentCodeColumn = 'adjustment_number';
 
-    protected $fillable = [
-        'adjustment_number',
-        'warehouse_id',
-        'adjustment_type',
-        'reason',
-        'status',
-        'user_id',
-        'notes',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'adjustment_type' => AdjustmentType::class,

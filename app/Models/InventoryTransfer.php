@@ -15,16 +15,7 @@ class InventoryTransfer extends Model
 
     protected string $documentCodeColumn = 'transfer_number';
 
-    protected $fillable = [
-        'transfer_number',
-        'from_warehouse_id',
-        'to_warehouse_id',
-        'status',
-        'shipped_at',
-        'received_at',
-        'user_id',
-        'notes',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'status' => TransferStatus::class,

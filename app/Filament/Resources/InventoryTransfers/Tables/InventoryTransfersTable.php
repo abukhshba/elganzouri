@@ -30,8 +30,8 @@ class InventoryTransfersTable
                     ->label(__('erp.fields.status'))
                     ->badge()
                     ->color(fn (TransferStatus $state): string => match ($state) {
-                        TransferStatus::COMPLETED => 'success',
-                        TransferStatus::IN_TRANSIT => 'warning',
+                        TransferStatus::RECEIVED => 'success',
+                        TransferStatus::SHIPPED => 'info',
                         TransferStatus::CANCELLED => 'danger',
                         default => 'gray',
                     })

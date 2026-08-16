@@ -24,7 +24,6 @@ class SalesForm
                             ->label(__('erp.fields.new_customer'))
                             ->default(false)
                             ->live()
-                            ->dehydrated(false)
                             ->columnSpanFull(),
 
                         Select::make('customer_id')
@@ -39,7 +38,6 @@ class SalesForm
                             ->label(__('erp.fields.name').' ('.__('erp.resources.customer').')')
                             ->visible(fn ($get): bool => (bool) $get('is_new_customer'))
                             ->required(fn ($get): bool => (bool) $get('is_new_customer'))
-                            ->dehydrated(false)
                             ->maxLength(150),
 
                         TextInput::make('new_customer_phone')
@@ -47,7 +45,6 @@ class SalesForm
                             ->tel()
                             ->visible(fn ($get): bool => (bool) $get('is_new_customer'))
                             ->required(fn ($get): bool => (bool) $get('is_new_customer'))
-                            ->dehydrated(false)
                             ->maxLength(30),
                     ])
                     ->columns(2)
@@ -57,10 +54,21 @@ class SalesForm
                     ->schema([
                         Repeater::make('items')
                             ->relationship('items')
+                            ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
+                                $qty = (float) ($data['quantity'] ?? 0);
+                                $price = (float) ($data['unit_price'] ?? 0);
+                                $data['line_total'] = $qty * $price;
+                                $data['conversion_factor'] = $data['conversion_factor'] ?? 1.0;
+                                $data['base_quantity'] = $qty * (float) $data['conversion_factor'];
+                                $data['base_unit_cost'] = $data['base_unit_cost'] ?? 0.0;
+                                $data['line_cogs'] = $data['line_cogs'] ?? 0.0;
+                                $data['line_profit'] = $data['line_profit'] ?? 0.0;
+                                return $data;
+                            })
                             ->schema([
                                 Select::make('item_id')
                                     ->label(__('erp.resources.item'))
-                                    ->relationship('item', 'name')
+                                    ->options(fn () => \App\Models\Item::pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->required()
@@ -81,7 +89,7 @@ class SalesForm
 
                                 Select::make('warehouse_id')
                                     ->label(__('erp.resources.warehouse'))
-                                    ->relationship('warehouse', 'name')
+                                    ->options(fn () => \App\Models\Warehouse::pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->required(),

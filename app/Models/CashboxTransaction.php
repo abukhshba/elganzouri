@@ -15,18 +15,7 @@ class CashboxTransaction extends Model
 
     public $timestamps = false;
 
-    protected $fillable = [
-        'cashbox_id',
-        'transaction_type',
-        'reference_type',
-        'reference_id',
-        'amount',
-        'balance_before',
-        'balance_after',
-        'user_id',
-        'description',
-        'created_at',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'transaction_type' => CashboxTransactionType::class,

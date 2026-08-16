@@ -16,23 +16,7 @@ class InventoryTransaction extends Model
 
     public $timestamps = false; // Uses immutable created_at timestamp
 
-    protected $fillable = [
-        'item_inventory_id',
-        'warehouse_id',
-        'item_id',
-        'base_unit_id',
-        'transaction_type',
-        'quantity',
-        'unit_cost',
-        'total_cost',
-        'balance_after',
-        'average_cost_after',
-        'reference_type',
-        'reference_id',
-        'performed_by',
-        'notes',
-        'created_at',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'transaction_type' => InventoryTransactionType::class,

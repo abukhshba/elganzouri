@@ -9,15 +9,7 @@ class DocumentNumberSequence extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'document_type',
-        'prefix',
-        'suffix',
-        'padding',
-        'current_number',
-        'reset_period',
-        'last_reset_at',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'padding' => 'integer',

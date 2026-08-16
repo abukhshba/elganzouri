@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\InventoryTransactions\Tables;
 
-use App\Enums\TransactionType;
+use App\Enums\InventoryTransactionType;
 use Filament\Actions;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -30,16 +30,16 @@ class InventoryTransactionsTable
                     ->label(__('erp.resources.item'))
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type')
+                Tables\Columns\TextColumn::make('transaction_type')
                     ->label(__('erp.fields.type'))
                     ->badge()
-                    ->color(fn (TransactionType $state): string => match ($state) {
-                        TransactionType::PURCHASE, TransactionType::ADJUSTMENT_IN, TransactionType::TRANSFER_IN => 'success',
-                        TransactionType::SALE, TransactionType::ADJUSTMENT_OUT, TransactionType::TRANSFER_OUT => 'danger',
+                    ->color(fn (InventoryTransactionType $state): string => match (true) {
+                        $state->isInflow() => 'success',
+                        $state->isOutflow() => 'danger',
                         default => 'warning',
                     })
                     ->sortable(),
-                Tables\Columns\TextColumn::make('quantity_change')
+                Tables\Columns\TextColumn::make('quantity')
                     ->label(__('erp.fields.quantity_change'))
                     ->numeric(4)
                     ->sortable(),
@@ -52,8 +52,8 @@ class InventoryTransactionsTable
                 Tables\Filters\SelectFilter::make('warehouse_id')
                     ->relationship('warehouse', 'name')
                     ->label(__('erp.resources.warehouse')),
-                Tables\Filters\SelectFilter::make('type')
-                    ->options(TransactionType::options())
+                Tables\Filters\SelectFilter::make('transaction_type')
+                    ->options(InventoryTransactionType::options())
                     ->label(__('erp.fields.type')),
             ])
             ->actions([
