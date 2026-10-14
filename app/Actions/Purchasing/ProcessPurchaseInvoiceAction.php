@@ -2,10 +2,13 @@
 
 namespace App\Actions\Purchasing;
 
+use App\Enums\CashboxTransactionType;
 use App\Enums\InventoryTransactionType;
 use App\Enums\PurchaseStatus;
+use App\Models\Cashbox;
 use App\Models\Purchase;
 use App\Services\InventoryPostingService;
+use App\Services\TreasuryService;
 use App\Services\UomService;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -14,11 +17,12 @@ class ProcessPurchaseInvoiceAction
 {
     public function __construct(
         protected InventoryPostingService $inventoryPostingService,
+        protected TreasuryService $treasuryService,
         protected UomService $uomService
     ) {}
 
     /**
-     * Confirm a draft purchase invoice, post stock IN via InventoryPostingService, and update supplier AP balance.
+     * Confirm a draft purchase invoice, post stock IN via InventoryPostingService, pay the supplier from the cashbox and update supplier AP balance.
      */
     public function execute(Purchase $purchase, int $userId): Purchase
     {
@@ -63,7 +67,23 @@ class ProcessPurchaseInvoiceAction
                 );
             }
 
-            // 3. Update Supplier AP Debt Balance
+            // 3. Record Cash Payment out of the Cashbox if paid_amount > 0
+            if ((float) $purchase->paid_amount > 0) {
+                $cashboxId = $purchase->cashbox_id ?? Cashbox::where('is_active', true)->value('id');
+
+                if ($cashboxId) {
+                    $this->treasuryService->postTransaction(
+                        cashboxId: $cashboxId,
+                        type: CashboxTransactionType::OUT,
+                        amount: (float) $purchase->paid_amount,
+                        referenceModel: $purchase,
+                        userId: $userId,
+                        description: "Purchase Payment #{$purchase->purchase_number}"
+                    );
+                }
+            }
+
+            // 4. Update Supplier AP Debt Balance
             $dueAmount = round((float) $purchase->total_amount - (float) $purchase->paid_amount, 4);
             $purchase->due_amount = $dueAmount;
 

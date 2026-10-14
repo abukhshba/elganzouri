@@ -29,7 +29,7 @@ class ExpensesTable
                     ->label(__('erp.fields.amount'))
                     ->money('EGP')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_date')
+                Tables\Columns\TextColumn::make('expense_date')
                     ->label(__('erp.fields.payment_date'))
                     ->date()
                     ->sortable(),

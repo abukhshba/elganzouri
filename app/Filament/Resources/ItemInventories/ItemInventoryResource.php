@@ -3,20 +3,24 @@
 namespace App\Filament\Resources\ItemInventories;
 
 use App\Filament\Resources\ItemInventories\Pages;
-use App\Filament\Resources\ItemInventories\Schemas\ItemInventoryForm;
+use App\Filament\Resources\ItemInventories\RelationManagers\StockMovementsRelationManager;
+use App\Filament\Resources\ItemInventories\Schemas\ItemInventoryInfolist;
 use App\Filament\Resources\ItemInventories\Tables\ItemInventoriesTable;
 use App\Models\ItemInventory;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
+/**
+ * Inventory Audit Logs: current stock per item and warehouse, with the movements that produced it.
+ */
 class ItemInventoryResource extends Resource
 {
     protected static ?string $model = ItemInventory::class;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-chart-bar-square';
+    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-queue-list';
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationGroup(): ?string
     {
@@ -25,17 +29,23 @@ class ItemInventoryResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return __('erp.resources.item_inventory');
+        return __('erp.resources.inventory_transaction');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return __('erp.resources.item_inventories');
+        return __('erp.resources.inventory_transactions');
     }
 
-    public static function form(Schema $schema): Schema
+    public static function canCreate(): bool
     {
-        return ItemInventoryForm::configure($schema);
+        // Stock records are created by the posting service only
+        return false;
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return ItemInventoryInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -43,10 +53,18 @@ class ItemInventoryResource extends Resource
         return ItemInventoriesTable::configure($table);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            StockMovementsRelationManager::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListItemInventories::route('/'),
+            'view' => Pages\ViewItemInventory::route('/{record}'),
         ];
     }
 }

@@ -4,6 +4,9 @@ namespace App\Filament\Resources\Purchases\Tables;
 
 use App\Enums\PaymentStatus;
 use App\Enums\PurchaseStatus;
+use App\Filament\Resources\Purchases\Actions\ConfirmPurchaseAction;
+use App\Filament\Resources\Purchases\PurchaseResource;
+use App\Models\Purchase;
 use Filament\Actions;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -50,6 +53,11 @@ class PurchasesTable
                     ->label(__('erp.fields.total_amount'))
                     ->money('EGP')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('due_amount')
+                    ->label(__('erp.fields.remaining_amount'))
+                    ->money('EGP')
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('issue_date')
                     ->label(__('erp.fields.issue_date'))
                     ->date()
@@ -67,8 +75,10 @@ class PurchasesTable
                     ->label(__('erp.fields.status')),
             ])
             ->actions([
+                ConfirmPurchaseAction::make(),
                 Actions\ViewAction::make(),
-                Actions\EditAction::make(),
+                Actions\EditAction::make()
+                    ->visible(fn (Purchase $record): bool => PurchaseResource::canEdit($record)),
             ]);
     }
 }

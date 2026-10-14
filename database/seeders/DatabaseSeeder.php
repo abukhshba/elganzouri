@@ -28,12 +28,12 @@ class DatabaseSeeder extends Seeder
             CashboxSeeder::class,
             ExpenseCategorySeeder::class,
             CustomerSeeder::class,
-            PurchaseSeeder::class,
-            SaleSeeder::class,
-            PurchaseReturnSeeder::class,
-            SaleReturnSeeder::class,
-            InventoryAdjustmentSeeder::class,
-            InventoryTransferSeeder::class,
+//            PurchaseSeeder::class,
+//            SaleSeeder::class,
+//            PurchaseReturnSeeder::class,
+//            SaleReturnSeeder::class,
+//            InventoryAdjustmentSeeder::class,
+//            InventoryTransferSeeder::class,
         ]);
     }
 }

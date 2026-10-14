@@ -17,6 +17,7 @@ class InventoryTransferForm
         return $schema
             ->components([
                 Section::make(__('erp.resources.inventory_transfer'))
+                    ->columnSpanFull()
                     ->schema([
                         TextInput::make('transfer_number')
                             ->label(__('erp.fields.code'))

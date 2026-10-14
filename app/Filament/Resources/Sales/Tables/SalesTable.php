@@ -4,6 +4,9 @@ namespace App\Filament\Resources\Sales\Tables;
 
 use App\Enums\PaymentStatus;
 use App\Enums\SaleStatus;
+use App\Filament\Resources\Sales\Actions\ConfirmSaleAction;
+use App\Filament\Resources\Sales\SalesResource;
+use App\Models\Sale;
 use Filament\Actions;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -72,8 +75,10 @@ class SalesTable
                     ->label(__('erp.fields.status')),
             ])
             ->actions([
+                ConfirmSaleAction::make(),
                 Actions\ViewAction::make(),
-                Actions\EditAction::make(),
+                Actions\EditAction::make()
+                    ->visible(fn (Sale $record): bool => SalesResource::canEdit($record)),
             ]);
     }
 }

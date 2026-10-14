@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Purchase extends Model
 {
@@ -46,6 +47,11 @@ class Purchase extends Model
         return $this->belongsTo(Warehouse::class);
     }
 
+    public function cashbox(): BelongsTo
+    {
+        return $this->belongsTo(Cashbox::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -54,5 +60,10 @@ class Purchase extends Model
     public function items(): HasMany
     {
         return $this->hasMany(PurchaseItem::class);
+    }
+
+    public function payments(): MorphMany
+    {
+        return $this->morphMany(CashboxTransaction::class, 'reference');
     }
 }

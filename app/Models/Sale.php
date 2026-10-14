@@ -75,7 +75,6 @@ class Sale extends Model
      */
     public function getRemainingBalanceAttribute(): float
     {
-        $totalPaid = (float) $this->payments()->sum('amount');
-        return max(0, (float) $this->total_amount - $totalPaid);
+        return max(0, (float) $this->due_amount);
     }
 }

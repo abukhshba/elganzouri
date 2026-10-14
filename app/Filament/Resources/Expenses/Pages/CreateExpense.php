@@ -2,33 +2,45 @@
 
 namespace App\Filament\Resources\Expenses\Pages;
 
+use App\Actions\Treasury\RecordExpenseAction;
+use App\Exceptions\CashboxBalanceException;
 use App\Filament\Resources\Expenses\ExpenseResource;
-use App\Models\Cashbox;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class CreateExpense extends CreateRecord
 {
     protected static string $resource = ExpenseResource::class;
 
-    protected function mutateFormDataBeforeCreate(array $data): array
+    /**
+     * Create the expense through RecordExpenseAction so the cash OUT is written to the cashbox ledger.
+     */
+    protected function handleRecordCreation(array $data): Model
     {
-        $data['user_id'] = auth()->id();
-
-        $cashbox = Cashbox::lockForUpdate()->findOrFail($data['cashbox_id']);
-
-        if ((float) $cashbox->balance < (float) $data['amount']) {
+        try {
+            return app(RecordExpenseAction::class)->execute(
+                expenseCategoryId: (int) $data['expense_category_id'],
+                cashboxId: (int) $data['cashbox_id'],
+                amount: (float) $data['amount'],
+                expenseDate: (string) $data['expense_date'],
+                userId: auth()->id(),
+                referenceNumber: $data['reference_number'] ?? null,
+                notes: $data['notes'] ?? null,
+            );
+        } catch (CashboxBalanceException $e) {
             Notification::make()
-                ->title('Insufficient Cashbox Balance')
-                ->body("Cashbox {$cashbox->name} current balance ({$cashbox->balance} EGP) is below expense amount ({$data['amount']} EGP).")
+                ->title(__('erp.actions.expense_failed'))
+                ->body($e->getMessage())
                 ->danger()
                 ->send();
 
             $this->halt();
         }
+    }
 
-        $cashbox->decrement('balance', $data['amount']);
-
-        return $data;
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResourceUrl('index');
     }
 }

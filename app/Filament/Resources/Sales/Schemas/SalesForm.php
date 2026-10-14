@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Sales\Schemas;
 
+use App\Models\Cashbox;
 use App\Models\Item;
 
 use Filament\Forms\Components\Checkbox;
@@ -54,17 +55,8 @@ class SalesForm
                     ->schema([
                         Repeater::make('items')
                             ->relationship('items')
-                            ->mutateRelationshipDataBeforeCreateUsing(function (array $data): array {
-                                $qty = (float) ($data['quantity'] ?? 0);
-                                $price = (float) ($data['unit_price'] ?? 0);
-                                $data['line_total'] = $qty * $price;
-                                $data['conversion_factor'] = $data['conversion_factor'] ?? 1.0;
-                                $data['base_quantity'] = $qty * (float) $data['conversion_factor'];
-                                $data['base_unit_cost'] = $data['base_unit_cost'] ?? 0.0;
-                                $data['line_cogs'] = $data['line_cogs'] ?? 0.0;
-                                $data['line_profit'] = $data['line_profit'] ?? 0.0;
-                                return $data;
-                            })
+                            ->mutateRelationshipDataBeforeCreateUsing(fn (array $data): array => self::fillLineDefaults($data))
+                            ->mutateRelationshipDataBeforeSaveUsing(fn (array $data): array => self::fillLineDefaults($data))
                             ->schema([
                                 Select::make('item_id')
                                     ->label(__('erp.resources.item'))
@@ -155,10 +147,11 @@ class SalesForm
                     ->schema([
                         Select::make('cashbox_id')
                             ->label(__('erp.resources.cashbox'))
-                            ->relationship('cashbox', 'name')
+                            ->relationship('cashbox', 'name', fn ($query) => $query->where('is_active', true))
+                            ->default(fn () => Cashbox::where('is_active', true)->orderBy('id')->value('id'))
                             ->searchable()
                             ->preload()
-                            ->nullable(),
+                            ->required(fn ($get): bool => (float) $get('paid_amount') > 0),
 
                         TextInput::make('total_amount')
                             ->label(__('erp.fields.total_amount'))
@@ -212,5 +205,22 @@ class SalesForm
         if ((bool) $get('is_paid')) {
             $set('paid_amount', $formattedTotal);
         }
+    }
+
+    /**
+     * Placeholder values for the NOT NULL line columns; the page recalculates them after saving.
+     */
+    public static function fillLineDefaults(array $data): array
+    {
+        $qty = (float) ($data['quantity'] ?? 0);
+        $price = (float) ($data['unit_price'] ?? 0);
+        $data['line_total'] = $qty * $price;
+        $data['conversion_factor'] = $data['conversion_factor'] ?? 1.0;
+        $data['base_quantity'] = $qty * (float) $data['conversion_factor'];
+        $data['base_unit_cost'] = $data['base_unit_cost'] ?? 0.0;
+        $data['line_cogs'] = $data['line_cogs'] ?? 0.0;
+        $data['line_profit'] = $data['line_profit'] ?? 0.0;
+
+        return $data;
     }
 }

@@ -16,11 +16,12 @@ enum InventoryTransactionType: string
     case ADJUSTMENT_OUT = 'ADJUSTMENT_OUT';
     case RETURN_IN = 'RETURN_IN';
     case RETURN_OUT = 'RETURN_OUT';
+    case OPENING = 'OPENING';
 
     public function isInflow(): bool
     {
         return match ($this) {
-            self::IN, self::TRANSFER_IN, self::ADJUSTMENT_IN, self::RETURN_IN => true,
+            self::IN, self::TRANSFER_IN, self::ADJUSTMENT_IN, self::RETURN_IN, self::OPENING => true,
             default => false,
         };
     }
